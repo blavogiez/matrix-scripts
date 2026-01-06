@@ -2,15 +2,9 @@
 
 # configure ip statique et dns
 
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "usage: $0 xx suffixe"
-    echo "exemple: $0 110 1"
-    exit 1
-fi
+source "$(dirname "$0")/config.env"
 
-xx=$1
-suffixe=$2
-ip="10.42.$xx.$suffixe"
+ip="$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX"
 
 echo "configuration ip statique: $ip..."
 
@@ -18,24 +12,24 @@ echo "configuration ip statique: $ip..."
 cat > /etc/network/interfaces << EOF
 # Configuration de l'interface réseau
 
-allow-hotplug enp0s3
-iface enp0s3 inet static
+allow-hotplug $INTERFACE
+iface $INTERFACE inet static
     address $ip
-    netmask 255.255.0.0
-    gateway 10.42.0.1
+    netmask $NETMASK
+    gateway $GATEWAY
     pre-up /usr/bin/sleep 5
 EOF
 
 echo "ip statique configurée: $ip"
 
 # configure dns
-echo "nameserver 10.42.0.1" > /etc/resolv.conf
-echo "dns configuré: 10.42.0.1"
+echo "nameserver $DNS" > /etc/resolv.conf
+echo "dns configuré: $DNS"
 
 # redémarre interface
 echo "redémarrage interface réseau..."
-ifdown enp0s3 2>/dev/null
-ifup enp0s3
+ifdown $INTERFACE 2>/dev/null
+ifup $INTERFACE
 
 echo "configuration réseau terminée"
-echo "utilisez: ping -c 2 10.42.0.1"
+echo "utilisez: ping -c 2 $GATEWAY"
