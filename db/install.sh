@@ -47,3 +47,5 @@ cat /etc/postgresql/*/main/postgresql.conf | grep listen_addresses
 # on autorise l'utilisateur synapse_user à se connecter à la base matrix
 echo "configuration des accès..."
 echo "host    matrix    synapse_user    matrix   scram-sha-256" >> /etc/postgresql/*/main/pg_hba.conf
+
+systemctl restart postgresql
