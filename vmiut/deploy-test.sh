@@ -1,5 +1,5 @@
 #!/bin/bash
-# déploiement automatique de test
+# déploiement automatique de test (VM témoin pour la phase de pré-production)
 
 wget -O /tmp/matrix-scripts.tar.gz https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/archive/main/matrix-scripts-main.tar.gz && \
 tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp && \

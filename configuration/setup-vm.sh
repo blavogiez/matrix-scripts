@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # script de configuration complète d'une vm
+# On configure pleinement la vm avant d'installer ses services spécifiques. C'est la préparation/setup
+# donc on réutilise les scripts du dossier afin d'être modulaire
 
 source "$(dirname "$0")/config.env"
 
