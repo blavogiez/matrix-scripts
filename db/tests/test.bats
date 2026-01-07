@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-    export DB_HOST="10.42.123.3"
+    export DB_HOST="localhost"
     export PGPASSWORD="synapse_user"
 }
 
