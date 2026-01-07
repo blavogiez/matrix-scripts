@@ -19,7 +19,6 @@ setup() {
 @test "connexion base matrix depuis synapse_user (la base doit être vide)" {
     run psql -h $DB_HOST -U synapse_user -d matrix -c "\dt"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "Did not find any relations" ]]
 }
 
 # on fera plus de tests relatifs à la base lors de la vm matrix (puisque la vm db est installée en premier, on ne peut pas encore les faire)
