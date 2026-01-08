@@ -15,3 +15,5 @@ baptiste.lavogiez.etu@dattier:~$ vmiut executer test # le script va chercher la 
 ```
 
 Tout s'exécutera en tant que root, avec le résultat s'affichant dans la sortie standard.
+
+# Automatisation
