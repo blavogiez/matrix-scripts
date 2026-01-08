@@ -5,14 +5,14 @@
     [ "$status" -eq 0 ]
 }
 
-@test "port 8080 en ecoute" {
+@test "port 80 en ecoute" {
     run ss -tlnp
     [ "$status" -eq 0 ]
-    [[ "$output" =~ ":8080" ]]
+    [[ "$output" =~ ":80" ]]
 }
 
 @test "element web accessible" {
-    run curl -s http://localhost:8080
+    run curl -s http://localhost:80
     [ "$status" -eq 0 ]
     [[ "$output" =~ "Element" ]]
 }
