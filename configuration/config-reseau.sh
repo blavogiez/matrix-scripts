@@ -20,7 +20,8 @@ log_info "====================="
 log_info "Configuration IP statique: $IP..."
 
 # configure /etc/network/interfaces
-cat > /etc/network/interfaces << EOF
+if [ "$HOSTNAME" == "dns" ]; then
+    cat > /etc/network/interfaces << EOF
 # Configuration de l'interface réseau
 
 auto lo
@@ -31,8 +32,25 @@ iface $INTERFACE inet static
     address $IP
     netmask $NETMASK
     gateway $GATEWAY
+    dns-nameservers $GATEWAY
     pre-up /usr/bin/sleep 5
 EOF
+else
+    cat > /etc/network/interfaces << EOF
+# Configuration de l'interface réseau
+
+auto lo
+iface lo inet loopback
+
+allow-hotplug $INTERFACE
+iface $INTERFACE inet static
+    address $IP
+    netmask $NETMASK
+    gateway $GATEWAY
+    dns-nameservers $DNS
+    pre-up /usr/bin/sleep 5
+EOF
+fi
 
 
 
@@ -43,18 +61,8 @@ log_info "Installation de resolvconf..."
 log_info "DEBIAN_FRONTEND=$DEBIAN_FRONTEND"
 apt install -y resolvconf
 
-# configuration temporaire
-log_info "Configuration DNS..."
-
-
-# configuration dynamique (en fonction de hostname /= dns)
-if [ "$HOSTNAME" == "dns" ]; then 
-    echo "dns-nameservers $GATEWAY"
-    echo nameserver $GATEWAY > /etc/resolv.conf
-else
-    echo "dns-nameservers $DNS"
-    echo nameserver $DNS > /etc/resolv.conf
-fi
+# resolvconf va automatiquement générer /etc/resolv.conf
+# basé sur la directive dns-nameservers dans /etc/network/interfaces
 
 # redémarre interface
 log_info "Redémarrage interface réseau..."
