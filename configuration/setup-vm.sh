@@ -39,6 +39,7 @@ echo
 # 4. configuration etc/hosts
 # log_task "4. Configuration etc/hosts..."
 if [ "$HOSTNAME" == "dns" ]; then
+    log_task "DNS, on ajoute les hosts"
     ./add-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
     ./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
     ./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB_SUFFIX
