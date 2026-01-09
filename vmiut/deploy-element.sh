@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # déploiement automatique de db
 
 # phase 1 : config

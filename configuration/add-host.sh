@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # ajoute une entrée dans /etc/hosts
 

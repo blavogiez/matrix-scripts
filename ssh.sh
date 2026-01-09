@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Définition des valeurs par défaut
 DEFAULT_SERVER="dattier.iutinfo.fr"

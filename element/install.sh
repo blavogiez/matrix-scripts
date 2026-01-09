@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # version évolutive dans le temps
 ELEMENT_VERSION="${1:-1.11.85}"

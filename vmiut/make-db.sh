@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 vmiut supprimer db
 vmiut creer db
 vmiut demarrer db

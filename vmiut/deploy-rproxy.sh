@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # déploiement automatique de rproxy
 
 # phase 1 : config

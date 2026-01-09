@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # change le mot de passe d'un utilisateur
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # script de configuration complète d'une vm
 # On configure pleinement la vm avant d'installer ses services spécifiques. C'est la préparation/setup

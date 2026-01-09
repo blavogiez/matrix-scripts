@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Variables
 ID="${1:-123}"

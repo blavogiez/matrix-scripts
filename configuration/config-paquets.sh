@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # installe les paquets de base
 

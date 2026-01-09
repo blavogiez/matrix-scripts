@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # déploiement automatique de test (VM témoin pour la phase de pré-production)
 
 # phase 1 : config

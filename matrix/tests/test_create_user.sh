@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 USERNAME="${1:-testuser}"
 PASSWORD="${2:-testpass123}"
