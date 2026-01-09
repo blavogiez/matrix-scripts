@@ -9,6 +9,9 @@ apt install -y lsb-release wget apt-transport-https
 wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/matrix-org.list
 
+# configurer les permissions (sinon ça ne fonctionne pas)
+chmod o+r /usr/share/keyrings/matrix-org-archive-keyring.gpg
+
 log_info "Mise à jour des dépôts APT"
 
 apt update
