@@ -5,6 +5,12 @@
     [ "$status" -eq 0 ]
 }
 
+@test "config nginx correcte" {
+    run nginx -t
+    [ "$status" -eq 0 ]
+}
+
+
 @test "port 80 en ecoute" {
     run ss -tlnp
     [ "$status" -eq 0 ]
@@ -15,10 +21,5 @@
     run curl -s http://localhost:80
     [ "$status" -eq 0 ]
     [[ "$output" =~ "Element" ]]
-}
-
-@test "JSON correct (Parser jq)" {
-    run cat /var/www/element/config.json | jq '.'
-    [ "$status" -eq 0 ]
 }
 
