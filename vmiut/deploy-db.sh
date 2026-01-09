@@ -13,7 +13,6 @@ tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp
 cd "$DIR/configuration" 
 
 source ./config.env
-
 export HOSTNAME=$DB_HOSTNAME
 export IP_SUFFIX=$DB_SUFFIX
 

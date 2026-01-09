@@ -2,8 +2,6 @@
 set -e
 
 # configure sudo pour user
-
-source "$(dirname "$0")/config.env"
 source "$(dirname "$0")/utils.sh"
 
 log_info "Ajout de $DEFAULT_USER au groupe sudo..."
