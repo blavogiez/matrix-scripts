@@ -1,9 +1,10 @@
 #!/bin/bash
-set -e
 source "$(dirname "$0")/../configuration/utils.sh"
 
 log_info "Suppression ancienne VM db..."
 vmiut supprimer db
+
+set -e
 
 log_info "Création VM db..."
 vmiut creer db
