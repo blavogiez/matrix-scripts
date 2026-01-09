@@ -29,7 +29,7 @@ log_task "Extraction dans /var/www/element..."
 tar -xzf element-v${ELEMENT_VERSION}.tar.gz
 rm -rf /var/www/element
 mv element-v${ELEMENT_VERSION} /var/www/element
-chmod o+r /var/www/element/config.json
+
 chown -R www-data:www-data /var/www/element
 chmod -R 755 /var/www/element
 
@@ -37,6 +37,7 @@ chmod -R 755 /var/www/element
 log_task "Configuration element..."
 cd /var/www/element
 cp config.sample.json config.json
+chmod o+r /var/www/element/config.json
 
 # Modification du config.json avec sed pour base_url et server_name
 log_info "Mise à jour config.json..."
