@@ -13,8 +13,8 @@ vmiut demarrer db
 
 echo $PWD
 
-log_info "standby 10S avant démarrage"
-sleep 10
+log_info "standby 20S avant démarrage"
+sleep 20
 
 
 
