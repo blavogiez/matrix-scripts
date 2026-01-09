@@ -3,6 +3,18 @@ set -e
 
 source "$(dirname "$0")/utils.sh"
 
+# affichage des informations
+log_info "====================="
+log_info "CONFIGURATION RÉSEAU" 
+log_info "---------------------------------------------------------------"
+log_info "IP: $IP"
+log_info "INTERFACE: $INTERFACE"
+log_info "GATEWAY: $GATEWAY"
+log_info "NETMASK: $NETMASK"
+log_info "DNS: $DNS"
+log_info "DEBIAN-FRONTEND: $DEBIAN_FRONTEND"
+log_info "====================="
+
 # configure ip statique et dns
 
 log_info "Configuration IP statique: $IP..."
