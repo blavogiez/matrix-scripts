@@ -6,6 +6,8 @@
 
 source "$(dirname "$0")/config.env"
 
+export IP=$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX
+
 echo "======================================="
 echo "Configuration de la vm: $HOSTNAME"
 echo "IP: $IP"

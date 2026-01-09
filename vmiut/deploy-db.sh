@@ -15,7 +15,9 @@ cd "$DIR/configuration" && \
 
 export HOSTNAME='db'
 export IP_SUFFIX=3
+
 bash setup-vm.sh && \
+
 # phase 2 : installation du service spécialisé
 # on utilise les scripts du dossier associé au service dans le repo git obtenu
 cd ../db && \

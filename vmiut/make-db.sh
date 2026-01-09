@@ -1,5 +1,5 @@
 vmiut supprimer db
 vmiut creer db
 vmiut demarrer db
-export SCRIPT=scripts/vmiut/deploy-db.sh # chemin depuis la racine dattier (identique à celui des vboxes)
+export deploy-db.sh # chemin depuis la racine dattier (identique à celui des vboxes)
 vmiut executer db
