@@ -1,5 +1,6 @@
 #!/bin/bash
 source "$(dirname "$0")/../configuration/utils.sh"
+source "$(dirname "$0")/../configuration/config.env"
 
 log_info "Suppression ancienne VM dns..."
 vmiut supprimer dns
@@ -14,8 +15,12 @@ vmiut demarrer dns
 
 echo $PWD
 
-log_info "standby 20S avant démarrage"
-sleep 20
+TARGET_IP="${IP_PREFIX}.${IP_OCTET3}.${DNS_SUFFIX}"
+log_info "Attente de la réponse de la VM ($TARGET_IP)..."
+while ! ping -c 1 $TARGET_IP &> /dev/null; do
+    sleep 1
+done
+log_success "VM accessible !"
 
 
 
