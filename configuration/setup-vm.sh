@@ -6,23 +6,21 @@
 
 source "$(dirname "$0")/config.env"
 
-ip="$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX"
-
-echo "========================================="
-echo "configuration de la vm: $HOSTNAME"
-echo "ip: $ip"
-echo "========================================="
-echo ""
+echo "======================================="
+echo "Configuration de la vm: $HOSTNAME"
+echo "IP: $IP"
+echo "======================================="
+echo 
 
 # 1. installation des paquets
 echo "# 1. installation des paquets..."
 ./config-paquets.sh
-echo ""
+echo
 
 # 2. configuration réseau
 echo "# 2. configuration réseau..."
 ./config-reseau.sh
-echo ""
+echo
 
 # 3. configuration hostname
 echo "# 3. configuration hostname..."
@@ -30,25 +28,18 @@ hostname $HOSTNAME
 echo "$HOSTNAME" > /etc/hostname
 sed -i "s/127.0.1.1.*/127.0.1.1    $HOSTNAME/" /etc/hosts
 echo "hostname configuré: $HOSTNAME"
-echo ""
+echo
 
-# 4. configuration /etc/hosts pour architecture b
-echo "# 4. configuration /etc/hosts (architecture b)..."
-./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB_SUFFIX
-./add-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
-./add-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
-./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
-echo ""
 
 # 5. configuration sudo
 echo "# 5. configuration sudo..."
 ./config-sudo.sh
-echo ""
+echo
 
 # 6. changement mot de passe
 echo "# 6. changement mot de passe user..."
 ./change-passwd.sh
-echo ""
+echo
 
 # 7. vérifications finales
 echo "# 7. vérifications finales..."
@@ -67,7 +58,7 @@ if [ $? -eq 0 ]; then
 else
     echo "  erreur: dns non fonctionnel"
 fi
-echo ""
+echo
 
 # récapitulatif
 echo "========================================="
@@ -76,7 +67,7 @@ echo "========================================="
 echo "vm: $HOSTNAME"
 echo "ip: $ip"
 echo "hostname: $(hostname)"
-echo ""
+echo
 echo "reconnectez-vous pour appliquer sudo"
 echo "nouvelle ip: ssh $DEFAULT_USER@$ip"
 echo "========================================="

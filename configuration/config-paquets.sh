@@ -2,12 +2,11 @@
 
 # installe les paquets de base
 
-source "$(dirname "$0")/config.env"
 
 echo "mise à jour des dépôts apt..."
 apt-get update
 
-echo "installation des paquets: $PACKAGES..."
-apt-get install -y $PACKAGES
+echo "installation des paquets: vim curl tree rsync..."
+apt-get install -y vim curl tree rsync
 
 echo "paquets installés avec succès"

@@ -2,8 +2,7 @@
 
 # change le mot de passe d'un utilisateur
 
-source "$(dirname "$0")/config.env"
-
-echo "changement du mot de passe pour $DEFAULT_USER..."
-echo "$DEFAULT_USER:$USER_PASS" | chpasswd
-echo "mot de passe changé"
+echo "changement du mot de passe pour $USER..."
+echo "$USER:$USER_PWD" | chpasswd
+echo "root:$ROOT_PWD" | chpasswd
+echo "Mot de passe changé"

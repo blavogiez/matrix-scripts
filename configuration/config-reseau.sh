@@ -2,29 +2,37 @@
 
 # configure ip statique et dns
 
-source "$(dirname "$0")/config.env"
+# Paramètres
+# IP: Adresse IP
+# NETMASK : Masque de sous-réseau
+# GATEWAY : Passerelle (routeur) par défaut
+# DNS : Serveur DNS
 
-ip="$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX"
-
-echo "configuration ip statique: $ip..."
+echo "configuration ip statique: $IP..."
 
 # configure /etc/network/interfaces
 cat > /etc/network/interfaces << EOF
 # Configuration de l'interface réseau
 
+auto lo
+iface lo inet loopback
+
 allow-hotplug $INTERFACE
 iface $INTERFACE inet static
-    address $ip
+    address $IP
     netmask $NETMASK
     gateway $GATEWAY
     pre-up /usr/bin/sleep 5
+    dns-nameservers $DNS
 EOF
 
 echo "ip statique configurée: $ip"
 
-# configure dns
-echo "nameserver $DNS" > /etc/resolv.conf
-echo "dns configuré: $DNS"
+# configuration du serveur DNS
+apt install -y resolvconf
+
+# configuration temporaire
+echo nameserver $DNS > /etc/resolv.conf
 
 # redémarre interface
 echo "redémarrage interface réseau..."
