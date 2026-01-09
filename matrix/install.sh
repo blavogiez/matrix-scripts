@@ -48,6 +48,7 @@ database:
 log_config: "/etc/matrix-synapse/log.yaml"
 media_store_path: /var/lib/matrix-synapse/media
 signing_key_path: "/etc/matrix-synapse/homeserver.signing.key"
+registration_shared_secret: "$(openssl rand -base64 32)"
 trusted_key_servers: []
 enable_registration: true
 enable_registration_without_verification: true
