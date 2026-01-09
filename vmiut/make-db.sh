@@ -13,11 +13,12 @@ vmiut demarrer db
 
 echo $PWD
 
-log_info "StandBY 5S avant démarrage"
-sleep 5
+log_info "standby 10S avant démarrage"
+sleep 10
 
 
 
 log_info "Exécution du script de déploiement..."
-SCRIPT=deploy-db.sh vmiut executer db
+export SCRIPT=scripts/vmiut/deploy-db.sh 
+vmiut executer db
 log_success "Déploiement terminé"

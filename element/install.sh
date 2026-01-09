@@ -29,6 +29,7 @@ log_task "Extraction dans /var/www/element..."
 tar -xzf element-v${ELEMENT_VERSION}.tar.gz
 rm -rf /var/www/element
 mv element-v${ELEMENT_VERSION} /var/www/element
+chmod o+r /var/www/element/config.json
 chown -R www-data:www-data /var/www/element
 chmod -R 755 /var/www/element
 
