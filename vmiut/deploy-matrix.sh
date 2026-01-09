@@ -23,7 +23,10 @@ bash setup-vm.sh
 # on utilise les scripts du dossier associé au service dans le repo git obtenu
 cd ../matrix 
 bash install.sh 
-# testing post-installation
+
+
+# testing post-installation (nécessite ici psql)
+apt install -y postgresql-client
 
 bats tests/test.bats && \
 rm -rf /tmp/*
