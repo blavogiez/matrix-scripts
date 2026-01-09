@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# petites fonctions utilitaires pour ameliorer la visiblité de l'installation
+
 # Définition des couleurs
 RED='\033[0;31m'
 GREEN='\033[0;32m'

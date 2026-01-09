@@ -7,6 +7,7 @@ set -e
 
 source "$(dirname "$0")/utils.sh"
 
+# reconstruction ip selon parametres
 export IP=$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX
 
 log_info "======================================="
