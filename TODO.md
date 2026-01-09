@@ -9,3 +9,5 @@ Les scripts pourraient être assez simplistes, il s'agit souvent de juste echo d
 - Machine physique (IUT) --> SSH (dattier) --> VMs
 - Redémarrage final des machines
 - Terminal d'état s'affichant à la fin avec des indicateurs (ping) pour les services tournant
+
+- Le fichier config.env doit être modifié sur gitlab dynamiquement
