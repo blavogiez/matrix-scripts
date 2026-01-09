@@ -26,7 +26,7 @@ bash install.sh && \
 # testing post-installation
 
 # installation de bats
-apt install bats
+apt install -y bats
 
 bats tests/test.bats && \
 rm -rf /tmp/*
