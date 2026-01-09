@@ -11,6 +11,9 @@ vmiut creer db
 log_info "Démarrage VM db..."
 vmiut demarrer db
 
+log_info "StandBY 5S avant démarrage"
+sleep 5
+
 log_info "Exécution du script de déploiement..."
 SCRIPT=deploy-db.sh vmiut executer db
 log_success "Déploiement terminé"
