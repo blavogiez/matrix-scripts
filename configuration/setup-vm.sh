@@ -37,12 +37,12 @@ log_success "Hostname configuré: $HOSTNAME"
 echo
 
 # 4. configuration etc/hosts
-log_task "4. Configuration etc/hosts..."
-./config-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
-./config-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
-./config-host.sh db $IP_PREFIX.$IP_OCTET3.$DB
-./config-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
-./config-host.sh dns $IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX
+# log_task "4. Configuration etc/hosts..."
+./add-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
+./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
+./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB
+./add-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
+./add-host.sh dns $IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX
 echo
 
 # 5. configuration sudo
