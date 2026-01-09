@@ -4,16 +4,10 @@ set -e
 source "$(dirname "$0")/../configuration/utils.sh"
 
 # Variables
-ID="${1:-123}"
-DB_USER="${2:-synapse_user}"
-DB_USER_PASS="${3:-synapse_user}"
-DB_NAME="${4:-matrix}"
-
 
 log_info "Installation Postgresql pour Synapse"
 log_info "Utilisateur: $DB_USER"
 log_info "Base: $DB_NAME"
-echo ""
 
 # Installation
 log_task "Installation du paquet postgresql..."
