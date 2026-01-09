@@ -7,6 +7,8 @@ wget -O /tmp/matrix-scripts.tar.gz https://gitlab.univ-lille.fr/baptiste.lavogie
 tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp 
 cd /tmp/matrix-scripts-main/configuration 
 
+source ./config.env
+
 
 export HOSTNAME=$MATRIX_HOSTNAME
 export IP_SUFFIX=$MATRIX_SUFFIX
