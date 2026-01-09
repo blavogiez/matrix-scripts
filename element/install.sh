@@ -39,7 +39,7 @@ cp config.sample.json config.json
 
 # Modification du config.json avec sed pour base_url et server_name
 log_info "Mise à jour config.json..."
-sed -i 's|"base_url": "https://matrix-client.matrix.org"|"base_url": "http://matrix:8008"|' config.json
+sed -i 's|"base_url": "https://matrix-client.matrix.org"|"base_url": "'"https://${PHYS_HOSTNAME}.iutinfo.fr:8008"'"|' config.json
 sed -i 's|"server_name": "matrix.org"|"server_name": "'"${PHYS_HOSTNAME}.iutinfo.fr:8008"'"|' config.json
 
 # Configuration nginx
@@ -59,6 +59,9 @@ server {
     }
 }
 EOF
+
+# install de jq (Parser json, utilisé dans les tests)
+apt-get install -y jq
 
 # suppression du site par defaut (qui bloque le port 80) et activation element
 rm -f /etc/nginx/sites-enabled/default
