@@ -52,7 +52,7 @@ if [ "$HOSTNAME" == "dns" ]; then
     echo "dns-nameservers $GATEWAY"
     echo nameserver $GATEWAY > /etc/resolv.conf
 else
-    eho "dns-nameservers $DNS"
+    echo "dns-nameservers $DNS"
     echo nameserver $DNS > /etc/resolv.conf
 fi
 
