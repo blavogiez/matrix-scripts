@@ -8,6 +8,8 @@ set -e
 source "$(dirname "$0")/utils.sh"
 
 # reconstruction ip selon parametres
+
+
 export IP=$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX
 
 log_info "======================================="
@@ -34,6 +36,14 @@ sed -i "s/127.0.1.1.*/127.0.1.1    $HOSTNAME/" /etc/hosts
 log_success "Hostname configuré: $HOSTNAME"
 echo
 
+# 4. configuration etc/hosts
+log_task "4. Configuration etc/hosts..."
+./config-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
+./config-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
+./config-host.sh db $IP_PREFIX.$IP_OCTET3.$DB
+./config-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
+./config-host.sh dns $IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX
+echo
 
 # 5. configuration sudo
 log_task "5. Configuration sudo..."
