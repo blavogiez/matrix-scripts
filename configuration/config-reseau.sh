@@ -1,15 +1,11 @@
 #!/bin/bash
 set -e
 
+source "$(dirname "$0")/utils.sh"
+
 # configure ip statique et dns
 
-# Paramètres
-# IP: Adresse IP
-# NETMASK : Masque de sous-réseau
-# GATEWAY : Passerelle (routeur) par défaut
-# DNS : Serveur DNS
-
-echo "configuration ip statique: $IP..."
+log_info "Configuration IP statique: $IP..."
 
 # configure /etc/network/interfaces
 cat > /etc/network/interfaces << EOF
@@ -27,18 +23,20 @@ iface $INTERFACE inet static
     dns-nameservers $DNS
 EOF
 
-echo "ip statique configurée: $ip"
+log_success "IP statique configurée: $IP"
 
 # configuration du serveur DNS
+log_info "Installation de resolvconf..."
 apt install -y resolvconf
 
 # configuration temporaire
+log_info "Configuration DNS..."
 echo nameserver $DNS > /etc/resolv.conf
 
 # redémarre interface
-echo "redémarrage interface réseau..."
+log_info "Redémarrage interface réseau..."
 ifdown $INTERFACE 2>/dev/null
 ifup $INTERFACE
 
-echo "configuration réseau terminée"
-echo "utilisez: ping -c 2 $GATEWAY"
+log_success "Configuration réseau terminée"
+log_info "Utilisez: ping -c 2 $GATEWAY"

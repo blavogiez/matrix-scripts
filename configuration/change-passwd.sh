@@ -3,7 +3,10 @@ set -e
 
 # change le mot de passe d'un utilisateur
 
-echo "changement du mot de passe pour $USER..."
-echo "$USER:$USER_PWD" | chpasswd
-echo "root:$ROOT_PWD" | chpasswd
-echo "Mot de passe changé"
+source "$(dirname "$0")/config.env"
+source "$(dirname "$0")/utils.sh"
+
+log_info "Changement du mot de passe pour $DEFAULT_USER..."
+echo "$DEFAULT_USER:$USER_PASS" | chpasswd
+echo "root:$ROOT_PASS" | chpasswd
+log_success "Mots de passe changés"

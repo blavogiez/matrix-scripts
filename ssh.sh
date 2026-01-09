@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+source "$(dirname "$0")/configuration/utils.sh"
 
 # Définition des valeurs par défaut
 DEFAULT_SERVER="dattier.iutinfo.fr"
@@ -109,33 +110,27 @@ shift $((OPTIND -1))
 SERVER=${SERVER:-$DEFAULT_SERVER}
 LOGIN=${LOGIN:-$DEFAULT_LOGIN}
 
-echo "--- Configuration SSH pour Dattier ---"
-echo "Serveur: **$SERVER**"
-echo "Login: **$LOGIN**"
+log_info "Configuration SSH pour Dattier"
+log_info "Serveur: $SERVER"
+log_info "Login: $LOGIN"
 echo ""
 
-# Le message de bienvenue est maintenant juste informatif (plus besoin du 'read')
-echo "Ce script va configurer l'accès SSH au serveur **$SERVER** pour le login **$LOGIN**."
+log_info "Ce script va configurer l'accès SSH au serveur $SERVER pour le login $LOGIN."
 
----
-
-## 🔑 Test de Connexion
-
-# On boucle uniquement si la connexion échoue et que l'utilisateur veut réessayer
-while true;
-do
+# Test Connexion
+while true; do
     echo ""
-    echo "Test de la connexion SSH au serveur Dattier"
-    echo "Commande: ssh $LOGIN@$SERVER echo 'Connexion réussie!'"
+    log_task "Test de la connexion SSH au serveur Dattier"
+    log_info "Commande: ssh $LOGIN@$SERVER echo 'Connexion réussie!'"
 
     # Using short timeout in order not to block everything
     ssh -o ConnectTimeout=5 $LOGIN@$SERVER echo 'Connexion réussie!'
 
     if [[ "$?" == 0 ]]; then
-        echo "**Connexion SSH OK.**"
+        log_success "Connexion SSH OK."
         break
     else
-        echo "**❌ La connexion a échoué.**"
+        log_error "La connexion a échoué."
 
         # If in interactive mode, asking then retrying if incorrect
         if [[ "$1" == "" && "$2" == "" ]]; then
@@ -150,16 +145,13 @@ do
             fi
         else
             # In non-interactive mode, exit if it fails
-            echo "Arrêt du script car la connexion a échoué avec les arguments fournis."
+            log_error "Arrêt du script car la connexion a échoué avec les arguments fournis."
             exit 1
         fi
     fi
 done
 
----
-
-## 🔐 Gestion de la Clé SSH RSA
-
+# RSA Key
 if [[ $AUTO_RSA == 0 ]]; then
     read -r -p "Créer une clé privée RSA? [Y/n] " rsa
     if [[ "$rsa" =~ ^[Nn]$ ]]; then
@@ -171,14 +163,14 @@ fi
 
 if [[ $AUTO_RSA == 1 ]]; then
     echo ""
-    echo "Génération de la clé RSA (ssh-keygen)"
+    log_task "Génération de la clé RSA (ssh-keygen)"
 
     ssh-keygen -t rsa
 
     if [[ "$?" != "0" ]]; then
-        echo "❌ La clé n'a pas pu être générée. On continue quand même."
+        log_error "La clé n'a pas pu être générée. On continue quand même."
     else
-        echo "**Clé RSA générée.**"
+        log_success "Clé RSA générée."
 
         # --- Copie de la Clé ---
         if [[ $AUTO_COPY == 0 ]]; then
@@ -192,22 +184,19 @@ if [[ $AUTO_RSA == 1 ]]; then
 
         if [[ $AUTO_COPY == 1 ]]; then
             echo ""
-            echo "Copie de la clé distante (ssh-copy-id)"
+            log_task "Copie de la clé distante (ssh-copy-id)"
             ssh-copy-id "$LOGIN@$SERVER"
 
             if [[ "$?" != "0" ]]; then
-                echo "❌ La clé n'a pas pu être copiée. Vérifiez le mot de passe."
+                log_error "La clé n'a pas pu être copiée. Vérifiez le mot de passe."
             else
-                echo "**Clé publique copiée.** Vous devriez pouvoir vous connecter sans mot de passe maintenant."
+                log_success "Clé publique copiée. Vous devriez pouvoir vous connecter sans mot de passe maintenant."
             fi
         fi
     fi
 fi
 
----
-
-## SSH Configuration update
-
+# SSH Config
 if [[ $AUTO_CONFIG == 0 ]]; then
     read -r -p "Ajouter 'dattier' à la configuration SSH (~/.ssh/config)? [Y/n] " config
     if [[ "$config" =~ ^[Nn]$ ]]; then
@@ -220,10 +209,10 @@ fi
 if [[ $AUTO_CONFIG == 1 ]]; then
     # Simple verification in order to avoid adding the same host multiple times
     if grep -q "Host dattier" ~/.ssh/config 2>/dev/null; then
-        echo "**⚠️ L'hôte 'dattier' est déjà dans ta config SSH. Je ne fais rien.**"
+        log_warning "L'hôte 'dattier' est déjà dans ta config SSH. Je ne fais rien."
     else
         echo ""
-        echo "Ajout de la configuration à **~/.ssh/config**"
+        log_task "Ajout de la configuration à ~/.ssh/config"
 
         # Utilisation de HERE document pour écrire plusieurs lignes proprement
         cat << EOF >> ~/.ssh/config
@@ -232,9 +221,9 @@ Host dattier
     HostName $SERVER
     User $LOGIN
 EOF
-        echo "**✅ Configuration ajoutée.** Tu peux te connecter avec : **ssh dattier**"
+        log_success "Configuration ajoutée. Tu peux te connecter avec : ssh dattier"
     fi
 fi
 
 echo ""
-echo "🎉 Le script a bien été exécuté."
+log_success "Le script a bien été exécuté."

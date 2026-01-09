@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
 
+source "$(dirname "$0")/utils.sh"
+
 # installe les paquets de base
 
-
-echo "mise à jour des dépôts apt..."
+log_info "Mise à jour des dépôts apt..."
 apt-get update
 
-echo "installation des paquets: vim curl tree rsync..."
+log_info "Installation des paquets: vim curl tree rsync..."
 apt-get install -y vim curl tree rsync
 
-echo "paquets installés avec succès"
+log_success "Paquets installés avec succès"

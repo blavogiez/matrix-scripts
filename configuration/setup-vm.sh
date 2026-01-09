@@ -6,71 +6,72 @@ set -e
 # donc on réutilise les scripts du dossier afin d'être modulaire
 
 source "$(dirname "$0")/config.env"
+source "$(dirname "$0")/utils.sh"
 
 export IP=$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX
 
-echo "======================================="
-echo "Configuration de la vm: $HOSTNAME"
-echo "IP: $IP"
-echo "======================================="
+log_info "======================================="
+log_info "Configuration de la vm: $HOSTNAME"
+log_info "IP cible: $IP"
+log_info "======================================="
 echo 
 
 # 1. installation des paquets
-echo "# 1. installation des paquets..."
+log_task "1. Installation des paquets..."
 ./config-paquets.sh
 echo
 
 # 2. configuration réseau
-echo "# 2. configuration réseau..."
+log_task "2. Configuration réseau..."
 ./config-reseau.sh
 echo
 
 # 3. configuration hostname
-echo "# 3. configuration hostname..."
+log_task "3. Configuration hostname..."
 hostname $HOSTNAME
 echo "$HOSTNAME" > /etc/hostname
 sed -i "s/127.0.1.1.*/127.0.1.1    $HOSTNAME/" /etc/hosts
-echo "hostname configuré: $HOSTNAME"
+log_success "Hostname configuré: $HOSTNAME"
 echo
 
 
 # 5. configuration sudo
-echo "# 5. configuration sudo..."
+log_task "5. Configuration sudo..."
 ./config-sudo.sh
 echo
 
 # 6. changement mot de passe
-echo "# 6. changement mot de passe user..."
+log_task "6. Changement mot de passe user..."
 ./change-passwd.sh
 echo
 
 # 7. vérifications finales
-echo "# 7. vérifications finales..."
-echo "test connectivité passerelle..."
+log_task "7. Vérifications finales..."
+log_info "Test connectivité passerelle..."
 ping -c 2 $GATEWAY > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo "  ok: passerelle accessible"
+    log_success "Passerelle accessible"
 else
-    echo "  erreur: passerelle non accessible"
+    log_error "Passerelle non accessible"
 fi
 
-echo "test résolution dns..."
+log_info "Test résolution DNS..."
 ping -c 2 google.com > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-    echo "  ok: dns fonctionnel"
+    log_success "DNS fonctionnel"
 else
-    echo "  erreur: dns non fonctionnel"
+    log_error "DNS non fonctionnel"
 fi
 echo
 
 # récapitulatif
-echo "========================================="
-echo "configuration terminée"
-echo "========================================="
-echo "vm: $HOSTNAME"
-echo "ip: $ip"
-echo "hostname: $(hostname)"
+log_info "========================================="
+log_success "Configuration terminée"
+log_info "========================================="
+log_info "VM: $HOSTNAME"
+log_info "IP: $IP"
+log_info "Hostname: $(hostname)"
 echo
-echo "reconnectez-vous pour appliquer sudo"
-echo "nouvelle ip: ssh $DEFAULT_USER@$ip"
-echo "========================================="
+log_info "Reconnectez-vous pour appliquer sudo"
+log_info "Nouvelle IP: ssh $DEFAULT_USER@$IP"
+log_info "========================================="
