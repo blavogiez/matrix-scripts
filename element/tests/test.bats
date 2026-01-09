@@ -18,7 +18,7 @@
 }
 
 @test "JSON correct (Parser jq)" {
-    run cat /var/www/element/config.json | jq
+    run cat /var/www/element/config.json | jq '.'
     [ "$status" -eq 0 ]
 }
 
