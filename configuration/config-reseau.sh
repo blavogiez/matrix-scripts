@@ -27,6 +27,7 @@ log_success "IP statique configurée: $IP"
 
 # configuration du serveur DNS
 log_info "Installation de resolvconf..."
+log_info "DEBIAN_FRONTEND=$DEBIAN_FRONTEND"
 apt install -y resolvconf
 
 # configuration temporaire
