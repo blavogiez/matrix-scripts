@@ -41,8 +41,8 @@ chmod o+r /var/www/element/config.json
 
 # Modification du config.json avec sed pour base_url et server_name
 log_info "Mise à jour config.json..."
-sed -i 's|"base_url": "https://matrix-client.matrix.org"|"base_url": "'"http://${PHYS_HOSTNAME}.iutinfo.fr:9090"'"|' config.json
-sed -i 's|"server_name": "matrix.org"|"server_name": "'"${PHYS_HOSTNAME}.iutinfo.fr:9090"'"|' config.json
+sed -i 's|"base_url": "https://matrix-client.matrix.org"|"base_url": "'"http://matrix.${INSTANCE_NAME}:9090"'"|' config.json
+sed -i 's|"server_name": "matrix.org"|"server_name": "'"matrix.${INSTANCE_NAME}:9090"'"|' config.json
 
 # Configuration nginx
 log_task "Configuration nginx..."
