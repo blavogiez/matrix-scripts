@@ -15,3 +15,9 @@ bash setup-vm.sh
 
 # phase 2 : installation du service spécialisé
 # on utilise les scripts du dossier associé au service dans le repo git obtenu
+cd ../matrix 
+bash install.sh 
+# testing post-installation
+
+bats tests/test.bats && \
+rm -rf /tmp/*
