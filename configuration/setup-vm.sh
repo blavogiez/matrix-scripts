@@ -5,7 +5,6 @@ set -e
 # On configure pleinement la vm avant d'installer ses services spécifiques. C'est la préparation/setup
 # donc on réutilise les scripts du dossier afin d'être modulaire
 
-source "$(dirname "$0")/config.env"
 source "$(dirname "$0")/utils.sh"
 
 export IP=$IP_PREFIX.$IP_OCTET3.$IP_SUFFIX
