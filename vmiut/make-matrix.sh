@@ -14,8 +14,8 @@ vmiut demarrer matrix
 
 echo $PWD
 
-log_info "standby 20S avant démarrage"
-sleep 20
+log_info "standby 30S avant démarrage"
+sleep 30
 
 
 
