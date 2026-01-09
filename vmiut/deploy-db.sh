@@ -24,6 +24,10 @@ bash setup-vm.sh && \
 cd ../db && \
 bash install.sh && \
 # testing post-installation
+
+# installation de bats
+apt install bats
+
 bats tests/test.bats && \
 rm -rf /tmp/*
 
