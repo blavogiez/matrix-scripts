@@ -38,12 +38,13 @@ echo
 
 # 4. configuration etc/hosts
 # log_task "4. Configuration etc/hosts..."
-./add-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
-./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
-./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB_SUFFIX
-./add-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
-./add-host.sh dns $IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX
-echo
+if [ "$HOSTNAME" == "dns" ]; then
+    ./add-host.sh matrix $IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX
+    ./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
+    ./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB_SUFFIX
+    ./add-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
+    echo
+fi
 
 # 5. configuration sudo
 log_task "5. Configuration sudo..."
