@@ -1,3 +1,4 @@
+./make-dns.sh
 ./make-db.sh
 ./make-matrix.sh
 ./make-element.sh
