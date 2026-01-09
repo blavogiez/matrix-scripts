@@ -20,11 +20,8 @@ bash setup-vm.sh && \
 # on utilise les scripts du dossier associé au service dans le repo git obtenu
 cd ../element && \
 bash install.sh && \
+
 # testing post-installation
-
-# installation de bats
-apt install bats
-
 bats tests/test.bats && \
 rm -rf /tmp/*
 
