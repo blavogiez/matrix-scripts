@@ -8,8 +8,8 @@ tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp
 cd /tmp/matrix-scripts-main/configuration 
 
 
-export HOSTNAME=matrix
-export IP_SUFFIX=1 
+export HOSTNAME=$MATRIX_HOSTNAME
+export IP_SUFFIX=$MATRIX_SUFFIX
 
 bash setup-vm.sh
 

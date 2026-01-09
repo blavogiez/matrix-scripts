@@ -14,7 +14,7 @@ cd "$DIR/configuration"
 
 source ./config.env
 
-export HOSTNAME='db'
+export HOSTNAME=$DB_HOSTNAME
 export IP_SUFFIX=$DB_SUFFIX
 
 bash setup-vm.sh 
