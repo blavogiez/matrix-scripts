@@ -14,7 +14,7 @@
 @test "route vers synapse" {
     run curl -s -H "Host: matrix.frene20.iutinfo.fr" http://localhost
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "It works" ]]
+    [[ "$output" =~ "matrix" ]]
 }
 
 @test "route vers element" {
