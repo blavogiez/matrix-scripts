@@ -28,17 +28,17 @@ setup() {
 @test "page accueil synapse" {
     run curl -s http://localhost:8008
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "It works" ]]
+    [[ "$output" =~ "matrix" ]]
 }
 
 @test "creation utilisateur synapse reussit" {
-    run ./test_create_user.sh "$USERNAME" "$PASSWORD" "$DB_HOST"
+    run tests/test_create_user.sh "$USERNAME" "$PASSWORD" "$DB_HOST"
     [ "$status" -eq 0 ]
     [[ "$output" =~ "test reussi" ]]
 }
 
 @test "utilisateur existe dans postgres" {
-    ./test_create_user.sh "$USERNAME" "$PASSWORD" "$DB_HOST" >/dev/null 2>&1
+    tests/test_create_user.sh "$USERNAME" "$PASSWORD" "$DB_HOST" >/dev/null 2>&1
     
     run psql -h $DB_HOST -U synapse_user -d matrix -t -c "select 1 from users where name like '%$USERNAME%';"
     [ "$status" -eq 0 ]
