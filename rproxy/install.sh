@@ -10,7 +10,7 @@ apt install -y nginx
 
 log_info "Écriture de la configuration du Reverse Proxy"
 
-cat > /etc/nginx/sites-enabled/default << EOF
+cat > /etc/nginx/sites-available/matrix-reverse-proxy << EOF
 
 server {
   listen 80;
@@ -25,7 +25,7 @@ server {
 
 server {
   listen 80;
-  server_name $INSTANCE_NAME;
+  server_name matrix.$INSTANCE_NAME;
 
   # Synapse sur VM matrix:8008
   location / {
@@ -35,6 +35,14 @@ server {
 }
 
 EOF
+
+log_info "Configuration des liens symboliques nginx"
+
+# Supprimer le site par défaut
+rm -f /etc/nginx/sites-enabled/default
+
+# Activer le site via lien symbolique
+ln -sf /etc/nginx/sites-available/matrix-reverse-proxy /etc/nginx/sites-enabled/matrix-reverse-proxy
 
 log_info "Redémarrage du serveur nginx"
 
