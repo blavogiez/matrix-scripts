@@ -29,19 +29,28 @@ orchestrate_infra() {
     # exécution des commandes
     
     # P0: Base de données
-    tmux send-keys -t "$SESSION:0.0" "clear && $SCRIPT_PATH/make-db.sh; echo 'DB Running'; bash" C-m
+    tmux send-keys -t "$SESSION:0.0" "clear && $SCRIPT_PATH/make-db.sh; echo 'DB Running'; tmux wait-for -S db-ready ; bash" C-m
 
     # P1: Matrix
-    tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; bash" C-m
+    tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
 
     # P3: Element
-    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-element.sh; echo 'Element Running'; bash" C-m
+    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
 
     # P4: Rproxy
-    tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; bash" C-m
+    tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
 
     # P2: Monitoring (Au centre)
     tmux send-keys -t "$SESSION:0.2" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
+
+    # Dernière pane (à la fin)
+    # Crée une window 3
+    tmux split-window -h -t "$SESSION:0.2"
+    tmux send-keys -t "$SESSION:0.3" "clear && echo 'Waiting for other to finish...' ; tmux wait-for db-ready ; \
+				tmux wait-for matrix-ready ; \
+				tmux wait-for element-ready ; \
+				tmux wait-for rproxy-ready ; \
+				$SCRIPT_PATH/make-backup.sh ; echo 'Backup running' ; bash"
 }
 
 
