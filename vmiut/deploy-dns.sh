@@ -8,7 +8,7 @@ DIR="/tmp/matrix-scripts-main"
 
 apt-get install -y curl
 
-curl -fL --retry 3 --progress-bar -o /tmp/matrix-scripts.tar.gz "$REPO" 
+curl -fL --retry 3 --progress-bar -o /tmp/matrix-scripts.tar.gz "$REPO" && \
 tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp 
 cd "$DIR/configuration" 
 
