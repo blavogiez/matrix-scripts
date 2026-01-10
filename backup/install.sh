@@ -46,7 +46,7 @@ log_success "Script de nettoyage créé"
 
 # config cron pour nettoyage quotidien à 2h
 log_task "config cron pour nettoyage automatique..."
-(crontab -l 2>/dev/null || true; echo "0 2 * * * /usr/local/bin/cleanup-old-backups.sh") | crontab -
+(crontab -l 2>/dev/null || true; echo "* * * * * /usr/local/bin/cleanup-old-backups.sh") | crontab -
 log_success "Cron configuré (tous les jours à 23h)"
 
 # Vérification cron
