@@ -26,6 +26,6 @@ git push origin $GIT_BRANCH
 set -e
 
 # exécution sur le serveur distant
-ssh -t dattier "curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads | bash"
+ssh -t dattier "bash <(curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads)"
 
 
