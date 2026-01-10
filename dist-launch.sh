@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Script à lancer depuis la machine physique : récolte le nom, puis le modifie dans la configuration sur le dépôt, et lance l'autoinstall sur dattier.
+
 set -e
 
 DIST="${1:-dattier}"
