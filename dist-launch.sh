@@ -21,9 +21,6 @@ git commit -a -m "Run #$RUN_ID: Config file change"
 git push origin $GIT_BRANCH
 
 # exécution sur le serveur distant
-
-ssh $DIST << EOF
-curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads | bash
-EOF
+ssh -t dattier "curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads | bash"
 
 
