@@ -76,6 +76,11 @@ else
 fi
 echo
 
+# 8. configuration firewall
+log_task "8. Configuration firewall..."
+./firewall.sh
+echo
+
 # récapitulatif
 log_info "========================================="
 log_success "Configuration terminée"
