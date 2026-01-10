@@ -12,7 +12,7 @@ rm -rvf /tmp/scripts
 # changement de la configuration pour la machine physique
 git clone git@gitlab-ssh.univ-lille.fr:baptiste.lavogiez.etu/matrix-scripts.git /tmp/scripts
 cd /tmp/scripts
-sed -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' configuration/config.env
+sed -i -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' configuration/config.env
 
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
