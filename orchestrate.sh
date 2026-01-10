@@ -39,7 +39,7 @@ orchestrate_infra() {
     tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
 
     # P4: Rproxy (après matrix, car matrix a attendu db donc c assez long)
-    tmux send-keys -t "$SESSION:0.4" "sleep 120 && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
+    tmux send-keys -t "$SESSION:0.4" "tmux wait-for backup_ready && sleep 150 && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
 
     # P2: Monitoring (Au centre)
     tmux send-keys -t "$SESSION:0.2" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
