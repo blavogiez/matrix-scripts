@@ -16,13 +16,15 @@ baptiste.lavogiez.etu@dattier:~$ vmiut executer test # le script va chercher la 
 
 Tout s'exécutera en tant que root, avec le résultat s'affichant dans la sortie standard.
 
-## Environnement
+# Environnement
 
 Forkez ce dépôt, modifiez votre `config.env` (y compris URL dépôt) pour mettre votre numéro d'IP (octet 3) attribué.
 
-# Automatisation
+# Procédures
+
+Ce dépôt utilise les procédures réalisées dans le cadre de la SAÉ Déploiement : [Nos procédures](https://gitlab.univ-lille.fr/etu/2025-2026/s303/g-lavogiez-robert).
 
 # Licence
 
-Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie 
-Voir [Licence](.LICENSE) - copie interdite sans autorisation
+- Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie 
+- Voir [Licence](.LICENSE) - copie interdite sans autorisation
