@@ -1,6 +1,5 @@
 #!/bin/bash
-
-DIST={$1:"dattier"} 
+DIST="${1:-default}"
 RUN_ID=$(date +%Y%m%d-%H%M%S-%N)
 
 echo "Machine distante utilisée: $DIST"
