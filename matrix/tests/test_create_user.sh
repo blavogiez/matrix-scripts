@@ -3,7 +3,7 @@ set -e
 
 USERNAME="${1:-testuser}"
 PASSWORD="${2:-testpass123}"
-DB_HOST="${3:-10.42.123.3}"
+DB_HOST="${3:-10.42.123.3}" # todo le fix :
 SYNAPSE_PORT=8008
 SYNAPSE_URL="http://localhost:$SYNAPSE_PORT"
 

@@ -128,8 +128,8 @@ ssh $DEFAULT_USER@$BACKUP_IP "ls -lh /var/backups/matrix/matrix_*.dump 2>/dev/nu
 echo
 
 # Configuration cron
-log_task "Configuration cron pour sauvegarde quotidienne à 2h..."
-(crontab -l 2>/dev/null || true; echo "* * * * * /usr/local/bin/backup-synapse.sh") | crontab -
+log_task "Configuration cron pour sauvegarde à 2h et 15h..."
+(crontab -l 2>/dev/null || true; echo "0 2 * * * /usr/local/bin/backup-synapse.sh"; echo "0 15 * * * /usr/local/bin/backup-synapse.sh") | crontab -
 log_success "Cron configuré"
 
 log_info "Vérification cron:"
@@ -141,6 +141,6 @@ log_success "Configuration sauvegarde terminée"
 log_success "======================================="
 log_info "Sauvegarde locale: /var/backups/postgresql (7 jours)"
 log_info "Sauvegarde distante: $BACKUP_HOSTNAME:/var/backups/matrix (30 jours)"
-log_info "Fréquence: quotidienne à 2h du matin"
+log_info "Fréquence: 2x/jour à 2h et 15h"
 log_info "Logs: /var/backups/postgresql/backup.log"
 log_info "======================================="
