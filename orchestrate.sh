@@ -35,7 +35,7 @@ orchestrate_infra() {
     tmux send-keys -t "$SESSION:0.1" "tmux wait-for db-ready && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
 
     # P3: Element (après dns car independant)
-    tmux send-keys -t "$SESSION:0.3" "tmux wait-for dns-ready && $SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
+    tmux send-keys -t "$SESSION:0.3" "tmux wait-for dns_ready && $SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
 
     # P4: Rproxy (après matrix, car matrix a attendu db donc c assez long)
     tmux send-keys -t "$SESSION:0.4" "tmux wait-for matrix-ready && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
@@ -60,7 +60,7 @@ orchestrate_infra &
 CMD_DNS="rm -rvf scripts; \
          git clone $REPO_URL scripts && \
          tmux split-window -h -t '$SESSION:0.0' && \
-         tmux send-keys -t '$SESSION:0.1' '$SCRIPT_PATH/make-backup.sh; echo Backup Ready; tmux wait-for -S backup_ready; bash' C-m && \
+         tmux send-keys -t '$SESSION:0.1' '$SCRIPT_PATH/make-backup.sh; echo Backup Ready; tmux wait-for -S backup_ready; sleep 2; exit' C-m && \
          $SCRIPT_PATH/make-dns.sh && \
          echo 'DNS Ready! Splitting...' && \
          tmux wait-for -S dns_ready && \
