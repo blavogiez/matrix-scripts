@@ -9,7 +9,6 @@ orchestrate_infra() {
 
     # on attend que la VM DNS soit configurée avant de passer à la suite
     tmux wait-for dns_ready
-    tmux wait-for backup_ready
 
     # disivion de l'espace de travail
     tmux split-window -v -t "$SESSION:0.0"
@@ -29,17 +28,17 @@ orchestrate_infra() {
 
     # exécution des commandes (ordre séquentiel)
 
-    # P0: Base de données
-    tmux send-keys -t "$SESSION:0.0" "clear && $SCRIPT_PATH/make-db.sh; echo 'DB Running'; tmux wait-for -S db-ready ; bash" C-m
+    # P0: Base de données (après backup)
+    tmux send-keys -t "$SESSION:0.0" "tmux wait-for backup_ready && clear && $SCRIPT_PATH/make-db.sh; echo 'DB Running'; tmux wait-for -S db-ready ; bash" C-m
 
-    # P1: Matrix (après db, délai 60s)
-    tmux send-keys -t "$SESSION:0.1" "tmux wait-for db-ready && sleep 60 && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
+    # P1: Matrix (après db)
+    tmux send-keys -t "$SESSION:0.1" "tmux wait-for db-ready && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
 
-    # P3: Element (après matrix)
-    tmux send-keys -t "$SESSION:0.3" "tmux wait-for matrix-ready && $SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
+    # P3: Element (après dns car independant)
+    tmux send-keys -t "$SESSION:0.3" "tmux wait-for dns-ready && $SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
 
-    # P4: Rproxy (après element)
-    tmux send-keys -t "$SESSION:0.4" "tmux wait-for element-ready && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
+    # P4: Rproxy (après matrix, car matrix a attendu db donc c assez long)
+    tmux send-keys -t "$SESSION:0.4" "tmux wait-for matrix-ready && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
 
     # P2: Monitoring (Au centre)
     tmux send-keys -t "$SESSION:0.2" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
