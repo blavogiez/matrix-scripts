@@ -17,8 +17,13 @@ sed -i -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' configuration/con
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # commit des changements
+# suppression de set -e (au cas où le commit ne change rien)
+set +e
 git commit -a -m "Run #$RUN_ID: Config file change"
 git push origin $GIT_BRANCH
+
+# set -e
+set -e
 
 # exécution sur le serveur distant
 ssh -t dattier "curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads | bash"
