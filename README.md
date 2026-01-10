@@ -21,3 +21,8 @@ Tout s'exécutera en tant que root, avec le résultat s'affichant dans la sortie
 Forkez ce dépôt, modifiez votre `config.env` (y compris URL dépôt) pour mettre votre numéro d'IP (octet 3) attribué.
 
 # Automatisation
+
+# Licence
+
+Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie 
+Voir [Licence](.LICENSE) - copie interdite sans autorisation
