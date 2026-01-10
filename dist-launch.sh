@@ -7,6 +7,17 @@ set -e
 DIST="${1:-dattier}"
 RUN_ID=$(date +%Y%m%d-%H%M%S-%N)
 
+# Recup de l'octet 3 selon l'utilisateur etudiant (On check la plage moodle)
+USER_NAME=$(whoami)
+IP_OCTET3=$(grep "^${USER_NAME}=" "$(dirname "$0")/attribution-ip.env" | cut -d'=' -f2)
+
+if [ -z "$IP_OCTET3" ]; then
+    echo "Erreur: Aucune plage IP trouvée pour l'utilisateur $USER_NAME"
+    exit 1
+fi
+
+echo "Utilisateur: $USER_NAME -> IP_OCTET3: $IP_OCTET3"
+
 echo "Machine distante utilisée: $DIST"
 
 # suppression du dossier temporaire (s'il existe)
@@ -16,6 +27,7 @@ rm -rvf /tmp/scripts
 git clone git@gitlab-ssh.univ-lille.fr:baptiste.lavogiez.etu/matrix-scripts.git /tmp/scripts
 cd /tmp/scripts
 sed -i -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' configuration/config.env
+sed -i -e 's/IP_OCTET3=".*"/IP_OCTET3="'"$IP_OCTET3"'"/g' configuration/config.env
 
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
