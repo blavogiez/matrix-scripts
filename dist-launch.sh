@@ -1,8 +1,13 @@
 #!/bin/bash
-DIST="${1:-default}"
+set -e
+
+DIST="${1:-dattier}"
 RUN_ID=$(date +%Y%m%d-%H%M%S-%N)
 
 echo "Machine distante utilisée: $DIST"
+
+# suppression du dossier temporaire (s'il existe)
+rm -rvf /tmp/scripts 
 
 # changement de la configuration pour la machine physique
 git clone git@gitlab-ssh.univ-lille.fr:baptiste.lavogiez.etu/matrix-scripts.git /tmp/scripts
