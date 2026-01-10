@@ -33,3 +33,4 @@ check_port "Base de données" "$IP_PREFIX.$IP_OCTET3.$DB_SUFFIX" 5432
 check_port "Synapse Matrix"  "$IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX" 8008
 check_port "Element Web"     "$IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX" 80
 check_port "Reverse Proxy" "$IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX" 80
+check_port "Backup Server" "$IP_PREFIX.$IP_OCTET3.$BACKUP_SUFFIX" 22
