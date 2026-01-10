@@ -36,7 +36,8 @@ log_success "Création BDD terminée"
 # on écoute matrix
 log_task "Modification configuration pour écoute réseau..."
 
-sed -i -e 's/#listen_addresses = .*/listen_addresses = '\''localhost,10.42.123.3'\''/' /etc/postgresql/*/main/postgresql.conf
+DB_IP="$IP_PREFIX.$IP_OCTET3.$DB_SUFFIX"
+sed -i -e "s/#listen_addresses = .*/listen_addresses = 'localhost,$DB_IP'/" /etc/postgresql/*/main/postgresql.conf
 
 log_info "Adresses écoutées:"
 cat /etc/postgresql/*/main/postgresql.conf | grep listen_addresses
