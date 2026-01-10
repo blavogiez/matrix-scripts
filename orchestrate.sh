@@ -60,6 +60,7 @@ orchestrate_infra &
 
 CMD_DNS="rm -rvf scripts; \
          git clone $REPO_URL scripts && \
+         clear && \
          tmux split-window -h -t '$SESSION:0.0' && \
          tmux send-keys -t '$SESSION:0.1' '$SCRIPT_PATH/make-backup.sh; echo Backup Ready; tmux wait-for -S backup_ready; sleep 2; exit' C-m && \
          $SCRIPT_PATH/make-dns.sh && \

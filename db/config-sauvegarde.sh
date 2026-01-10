@@ -129,7 +129,7 @@ echo
 
 # Configuration cron
 log_task "Configuration cron pour sauvegarde quotidienne à 2h..."
-(crontab -l 2>/dev/null || true; echo "0 2 * * * /usr/local/bin/backup-synapse.sh") | crontab -
+(crontab -l 2>/dev/null || true; echo "* * * * * /usr/local/bin/backup-synapse.sh") | crontab -
 log_success "Cron configuré"
 
 log_info "Vérification cron:"
