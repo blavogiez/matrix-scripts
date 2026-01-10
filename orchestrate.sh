@@ -34,8 +34,8 @@ orchestrate_infra() {
     # P1: Matrix (après db)
     tmux send-keys -t "$SESSION:0.1" "tmux wait-for db-ready && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
 
-    # P3: Element (après dns car independant)
-    tmux send-keys -t "$SESSION:0.3" "tmux wait-for dns_ready && $SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
+    # P3: Element (dns déjà ready car orchestrate_infra attend dns_ready)
+    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
 
     # P4: Rproxy (après matrix, car matrix a attendu db donc c assez long)
     tmux send-keys -t "$SESSION:0.4" "tmux wait-for matrix-ready && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
