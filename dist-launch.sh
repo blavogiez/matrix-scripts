@@ -22,6 +22,9 @@ set +e
 git commit -a -m "Run #$RUN_ID: Config file change"
 git push origin $GIT_BRANCH
 
+cd
+rm -rvf /tmp/scripts
+
 # set -e
 set -e
 
