@@ -3,7 +3,7 @@
 setup() {
     export USERNAME="testuser"
     export PASSWORD="testpass123"
-    export DB_HOST="10.42.123.3"
+    export DB_HOST="$IP_PREFIX.$IP_OCTET3.$DB_SUFFIX"
     export PGPASSWORD="synapse_user"
 }
 
