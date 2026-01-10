@@ -4,7 +4,10 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# on test 2 chemins
 source configuration/config.env
+source scripts/configuration/config.env
+
 
 echo "--- INFRASTRUCTURE STATUS ---"
 echo "Date: $(date)"
@@ -23,7 +26,7 @@ check_port() {
     fi
 }
 
-# Liste de tes services
+# Liste des services
 check_port "DNS" "$IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX" 53
 check_port "Base de données" "$IP_PREFIX.$IP_OCTET3.$DB_SUFFIX" 5432
 check_port "Synapse Matrix"  "$IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX" 8008
