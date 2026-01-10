@@ -25,6 +25,9 @@ su - postgres -c "createuser $DB_USER" 2>/dev/null || log_warning "L'utilisateur
 log_task "Configuration mot de passe..."
 su - postgres -c "psql -c \"ALTER USER $DB_USER PASSWORD '$DB_USER_PASS';\""
 
+log_task "On donne les droits de création table (pour recréer selon le server_name)..."
+su - postgres -c "psql -c \"ALTER USER $DB_USER WITH CREATEDB';\""
+
 log_task "Création base $DB_NAME avec bon encoding..."
 su - postgres -c "dropdb $DB_NAME" 2>/dev/null || true
 su - postgres -c "createdb --encoding=UTF8 --locale=C --template=template0 --owner=$DB_USER $DB_NAME"
