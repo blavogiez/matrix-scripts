@@ -61,27 +61,13 @@ sleep 3
 # │     dashboard     │  (P6)
 # └───────────────────┘
 
-# Grille 3x2 + dashboard avec panes égaux
-# Indices: P0-P2 (colonne gauche), P3-P5 (colonne droite), P6 (dashboard)
-
-# 1. dashboard en premier (2 lignes seulement)
-tmux split-window -v -l 2 -t "$SESSION:0"
-
-# 2. Deux colonnes dans la grille
-tmux split-window -h -t "$SESSION:0.0"
-
-# 3. Colonne gauche: 2 splits
-tmux split-window -v -t "$SESSION:0.0"
-tmux split-window -v -t "$SESSION:0.0"
-
-# 4. Colonne droite: 2 splits
-tmux split-window -v -t "$SESSION:0.3"
-tmux split-window -v -t "$SESSION:0.3"
-
-# 5. Égaliser les panes de la grille (tmux 3.0+)
-for pane in 0 1 2 3 4 5; do
-    tmux resize-pane -t "$SESSION:0.$pane" -y 33%
-done
+# Grille 3x2 + dashboard
+tmux split-window -h -t "$SESSION:0"
+tmux split-window -v -p 67 -t "$SESSION:0.0"
+tmux split-window -v -p 50 -t "$SESSION:0.1"
+tmux split-window -v -p 67 -t "$SESSION:0.3"
+tmux split-window -v -p 50 -t "$SESSION:0.4"
+tmux split-window -v -f -l 1 -t "$SESSION:0"
 
 # Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
 # P0: dns | P1: db | P2: element (gauche) | P3: backup | P4: matrix | P5: rproxy (droite) | P6: dashboard
