@@ -55,6 +55,6 @@ log_task "Redémarrage postgresql..."
 systemctl restart postgresql
 log_success "Installation DB terminée"
 
-# Configuration sauvegarde automatique
+# Configuration sauvegarde automatique (donc on a besoin que la vm backup existe)
 log_task "Configuration sauvegarde vers VM backup..."
 bash "$(dirname "$0")/config-sauvegarde.sh"

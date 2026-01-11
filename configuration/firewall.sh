@@ -2,7 +2,7 @@
 set -e
 
 source "$(dirname "$0")/utils.sh"
-source "$(dirname "$0")/config.env"
+source "$(dirname "$0")/../config.env"
 
 log_info "Configuration firewall pour $(hostname) !"
 

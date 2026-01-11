@@ -44,6 +44,8 @@ if [ "$HOSTNAME" == "dns" ]; then
     ./add-host.sh rproxy $IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX
     ./add-host.sh db $IP_PREFIX.$IP_OCTET3.$DB_SUFFIX
     ./add-host.sh element $IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX
+    ./add-host.sh dns $IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX
+    ./add-host.sh backup $IP_PREFIX.$IP_OCTET3.$BACKUP_SUFFIX
     echo
 fi
 

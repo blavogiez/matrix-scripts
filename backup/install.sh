@@ -2,7 +2,7 @@
 set -e
 
 source "$(dirname "$0")/../configuration/utils.sh"
-source "$(dirname "$0")/../configuration/config.env"
+source "$(dirname "$0")/../config.env"
 
 log_info "Installation du serveur de sauvegarde"
 

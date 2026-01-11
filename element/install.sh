@@ -5,7 +5,7 @@ set -e
 ELEMENT_VERSION="${1:-1.11.85}"
 
 # Source config.env pour PHYS_HOSTNAME et IP
-source "$(dirname "$0")/../configuration/config.env"
+source "$(dirname "$0")/../config.env"
 source "$(dirname "$0")/../configuration/utils.sh"
 
 log_info "Installation Element Web"

@@ -8,8 +8,8 @@ NC='\033[0m' # No Color
 
 # on test 2 chemins
 # 2>/dev/null pour plus de transparrence
-source configuration/config.env 2>/dev/null 
-source scripts/configuration/config.env 2>/dev/null
+source config.env 2>/dev/null
+source scripts/config.env 2>/dev/null
 
 
 echo "--- INFRASTRUCTURE STATUS ---"

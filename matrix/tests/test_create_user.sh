@@ -2,7 +2,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/../../configuration/config.env"
+source "$SCRIPT_DIR/../../config.env"
 
 USERNAME="testuser"
 PASSWORD="testpass123"

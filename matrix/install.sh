@@ -21,6 +21,7 @@ log_info "Installation de Synapse"
 # présélections pour la configuration de synapse
 echo "matrix-synapse matrix-synapse/server-name string $INSTANCE_NAME" | sudo debconf-set-selections
 apt install -y matrix-synapse-py3
+apt install -y yamllint
 
 log_info "Écriture de la configuration synapse"
 log_info "FICHIER: /etc/matrix-synapse/homserver.yaml"
