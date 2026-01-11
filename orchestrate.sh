@@ -82,11 +82,11 @@ tmux resize-pane -t "$SESSION:0.6" -y 6
 # Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
 # P0: dns | P1: backup | P2: db | P3: matrix | P4: element | P5: rproxy | P6: dashboard
 tmux send-keys -t "$SESSION:0.0" "$SCRIPT_PATH/make-vm.sh dns setup && tmux wait-for -S dns_setup" C-m
-tmux send-keys -t "$SESSION:0.1" "sleep 3 && $SCRIPT_PATH/make-vm.sh backup setup && tmux wait-for -S backup_setup" C-m
-tmux send-keys -t "$SESSION:0.2" "sleep 7 && $SCRIPT_PATH/make-vm.sh db setup && tmux wait-for -S db_setup" C-m
-tmux send-keys -t "$SESSION:0.3" "sleep 11 && $SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
-tmux send-keys -t "$SESSION:0.4" "sleep 15 && $SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
-tmux send-keys -t "$SESSION:0.5" "sleep 19 && $SCRIPT_PATH/make-vm.sh rproxy setup && tmux wait-for -S rproxy_setup" C-m
+tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-vm.sh backup setup && tmux wait-for -S backup_setup" C-m
+tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh db setup && tmux wait-for -S db_setup" C-m
+tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
+tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
+tmux send-keys -t "$SESSION:0.5" "$SCRIPT_PATH/make-vm.sh rproxy setup && tmux wait-for -S rproxy_setup" C-m
 tmux send-keys -t "$SESSION:0.6" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
 
 # attendre tous les setup en background puis lancer phase 2
