@@ -14,20 +14,20 @@ SCRIPT_PATH="scripts/vmiut"
 phase2_install() {
     tmux wait-for phase1_complete
 
-    # Layout: P0: dns | P1: backup | P2: db | P3: matrix | P4: element | P5: rproxy | P6: dashboard
+    # Layout: P0: dns | P1: db | P2: element (gauche) | P3: backup | P4: matrix | P5: rproxy (droite) | P6: dashboard
     # DNS d'abord (les autres en ont besoin)
     tmux send-keys -t "$SESSION:0.0" "$SCRIPT_PATH/make-vm.sh dns install && tmux wait-for -S dns_ready" C-m
     tmux wait-for dns_ready
 
     # Backup + Element en parallèle (indépendants)
-    tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-vm.sh backup install && tmux wait-for -S backup_ready" C-m
-    tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh element install && tmux wait-for -S element_ready" C-m
+    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh backup install && tmux wait-for -S backup_ready" C-m
+    tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh element install && tmux wait-for -S element_ready" C-m
 
     # DB doit attendre backup car il en a besoin pour ses tests
-    tmux send-keys -t "$SESSION:0.2" "tmux wait-for backup_ready && $SCRIPT_PATH/make-vm.sh db install && tmux wait-for -S db_ready" C-m
+    tmux send-keys -t "$SESSION:0.1" "tmux wait-for backup_ready && $SCRIPT_PATH/make-vm.sh db install && tmux wait-for -S db_ready" C-m
 
     # Matrix attend DB
-    tmux send-keys -t "$SESSION:0.3" "tmux wait-for db_ready && $SCRIPT_PATH/make-vm.sh matrix install && tmux wait-for -S matrix_ready" C-m
+    tmux send-keys -t "$SESSION:0.4" "tmux wait-for db_ready && $SCRIPT_PATH/make-vm.sh matrix install && tmux wait-for -S matrix_ready" C-m
 
     # Rproxy en dernier (après matrix et element)
     tmux send-keys -t "$SESSION:0.5" "tmux wait-for matrix_ready && tmux wait-for element_ready && $SCRIPT_PATH/make-vm.sh rproxy install && tmux wait-for -S rproxy_ready" C-m
@@ -52,47 +52,39 @@ sleep 3
 # Création de la grille 3x2 + dashboard
 #
 # ┌─────────┬─────────┐
-# │   dns   │  backup │  (P0 | P1)
+# │   dns   │  backup │  (P0 | P3)
 # ├─────────┼─────────┤
-# │   db    │  matrix │  (P2 | P3)
+# │   db    │  matrix │  (P1 | P4)
 # ├─────────┼─────────┤
-# │ element │  rproxy │  (P4 | P5)
+# │ element │  rproxy │  (P2 | P5)
 # ├─────────┴─────────┤
 # │     dashboard     │  (P6)
 # └───────────────────┘
 
-# creation de la grille avec indices stables
-# Stratégie: créer tous les panes puis utiliser select-layout pour organiser
-#
-# Layout final voulu:
-# ┌─────────┬─────────┐
-# │ P0:dns  │P1:backup│
-# ├─────────┼─────────┤
-# │ P2:db   │P3:matrix│
-# ├─────────┼─────────┤
-# │P4:element│P5:rproxy│
-# ├─────────┴─────────┤
-# │   P6:dashboard    │
-# └───────────────────┘
+# splits manuels pour grille 3x2 + dashboard
+# Indices résultants: P0-P2 (colonne gauche), P3-P5 (colonne droite), P6 (dashboard)
 
-# faire 6 panes supplémentaires (total 7 avec P0)
-for i in {1..6}; do
-    tmux split-window -t "$SESSION:0"
-done
+# split horizontal (2 colonnes): P0 | P1
+tmux split-window -h -t "$SESSION:0"
 
-# Organiser en grille avec tiled layout
-tmux select-layout -t "$SESSION:0" tiled
+# col gauche: 2 splits verticaux (dns, db, element)
+tmux split-window -v -t "$SESSION:0.0"
+tmux split-window -v -t "$SESSION:0.0"
 
-# Le dashboard (P6) doit être en bas et plus petit
-tmux resize-pane -t "$SESSION:0.6" -y 6
+# col droite: 2 splits verticaux (backup, matrix, rproxy)
+tmux split-window -v -t "$SESSION:0.3"
+tmux split-window -v -t "$SESSION:0.3"
+
+# Dashboard pleine largeur en bas
+tmux split-window -v -f -l 6 -t "$SESSION:0"
 
 # Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
-# P0: dns | P1: backup | P2: db | P3: matrix | P4: element | P5: rproxy | P6: dashboard
+# P0: dns | P1: db | P2: element (gauche) | P3: backup | P4: matrix | P5: rproxy (droite) | P6: dashboard
 tmux send-keys -t "$SESSION:0.0" "$SCRIPT_PATH/make-vm.sh dns setup && tmux wait-for -S dns_setup" C-m
-tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-vm.sh backup setup && tmux wait-for -S backup_setup" C-m
-tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh db setup && tmux wait-for -S db_setup" C-m
-tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
-tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
+tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-vm.sh db setup && tmux wait-for -S db_setup" C-m
+tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
+tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh backup setup && tmux wait-for -S backup_setup" C-m
+tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
 tmux send-keys -t "$SESSION:0.5" "$SCRIPT_PATH/make-vm.sh rproxy setup && tmux wait-for -S rproxy_setup" C-m
 tmux send-keys -t "$SESSION:0.6" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
 
