@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Run tmux depuis dattier, lancé automatiquement par dist-launch.sh
+
 # configuration (par souci de dynamicité)
 SESSION="matrix_deploy"
 REPO_URL="https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts"
