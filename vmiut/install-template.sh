@@ -20,5 +20,10 @@ cd "$SERVICE/"
 bash install.sh
 
 # Tests post-installation
-bats tests/test.bats && \
+bats tests/test.bats
+
+# On change les mot de passe à la fin pour que VBoxManage puisse encore s'authentifier par le biais de vmiut executer (on a du le faire 2 fois), sinon il aurait pas pu car il utilise les mots de passe par défaut
+cd "$DIR/configuration"
+./change-passwd.sh
+
 rm -rf /tmp/*

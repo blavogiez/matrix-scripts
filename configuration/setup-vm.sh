@@ -54,13 +54,8 @@ log_task "5. Configuration sudo..."
 ./config-sudo.sh
 echo
 
-# 6. changement mot de passe
-log_task "6. Changement mot de passe user..."
-./change-passwd.sh
-echo
-
-# 7. vérifications finales
-log_task "7. Vérifications finales..."
+# 6. vérifications finales
+log_task "6. Vérifications finales..."
 log_info "Test connectivité passerelle..."
 ping -c 2 $GATEWAY > /dev/null 2>&1
 if [ $? -eq 0 ]; then
@@ -72,8 +67,8 @@ fi
 # Test DNS déplacé en Phase 2 (après installation DNS)
 echo
 
-# 8. configuration firewall
-log_task "8. Configuration firewall..."
+# 7. configuration firewall
+log_task "7. Configuration firewall..."
 ./firewall.sh
 echo
 
