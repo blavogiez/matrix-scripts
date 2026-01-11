@@ -4,6 +4,7 @@
 
 set -e
 
+REPO=git@gitlab-ssh.univ-lille.fr:baptiste.lavogiez.etu/matrix-scripts.git
 DIST="${1:-dattier}"
 RUN_ID=$(date +%Y%m%d-%H%M%S-%N)
 
@@ -24,7 +25,7 @@ echo "Machine distante utilisée: $DIST"
 rm -rvf /tmp/scripts 
 
 # changement de la configuration pour la machine physique
-git clone git@gitlab-ssh.univ-lille.fr:baptiste.lavogiez.etu/matrix-scripts.git /tmp/scripts
+git clone $REPO /tmp/scripts
 cd /tmp/scripts
 sed -i -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' config.env
 sed -i -e 's/IP_OCTET3=".*"/IP_OCTET3="'"$IP_OCTET3"'"/g' config.env

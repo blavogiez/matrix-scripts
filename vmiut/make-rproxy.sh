@@ -1,5 +1,6 @@
 #!/bin/bash
 source "$(dirname "$0")/../configuration/utils.sh"
+source "$(dirname "$0")/../config.env"
 
 log_info "Suppression ancienne VM rproxy..."
 vmiut supprimer rproxy
