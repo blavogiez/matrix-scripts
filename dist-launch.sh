@@ -30,6 +30,9 @@ cd /tmp/scripts
 sed -i -e 's/PHYS_HOSTNAME=".*"/PHYS_HOSTNAME='"$HOSTNAME"'/g' config.env
 sed -i -e 's/IP_OCTET3=".*"/IP_OCTET3="'"$IP_OCTET3"'"/g' config.env
 
+# Récupération de IP_PREFIX depuis config.env (avant suppression de /tmp/scripts)
+IP_PREFIX=$(grep "^IP_PREFIX=" config.env | cut -d'"' -f2)
+
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # commit des changements
@@ -47,4 +50,22 @@ set -e
 # exécution sur le serveur distant
 ssh -t dattier "bash <(curl https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/raw/main/orchestrate.sh?ref_type=heads)"
 
+# Configuration du tunnel vers rproxy
+RPROXY_IP="${IP_PREFIX}.${IP_OCTET3}.2"
+ELEMENT_URL="http://element.${HOSTNAME}.iutinfo.fr:9090"
 
+echo "Configuration de l'accès SSH vers rproxy..."
+echo "Veuillez entrer le mot de passe de l'utilisateur 'user' sur rproxy :"
+
+# Copie de la clé SSH vers rproxy (via ProxyJump dattier)
+ssh-copy-id -o ProxyJump=dattier user@${RPROXY_IP}
+
+# Ouverture du tunnel en arrière-plan
+echo "Ouverture du tunnel SSH vers rproxy (port local 9090)..."
+ssh -f -N -L 9090:localhost:80 -J dattier user@${RPROXY_IP}
+
+# Lancement de Firefox
+echo "Ouverture de Firefox sur ${ELEMENT_URL}..."
+firefox "${ELEMENT_URL}" &
+
+echo "Déploiement terminé ! Element est accessible sur ${ELEMENT_URL}"
