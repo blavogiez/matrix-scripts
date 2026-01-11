@@ -77,7 +77,7 @@ tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh db setup && tmux wait-
 tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
 tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
 tmux send-keys -t "$SESSION:0.5" "$SCRIPT_PATH/make-vm.sh rproxy setup && tmux wait-for -S rproxy_setup" C-m
-tmux send-keys -t "$SESSION:0.6" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
+tmux send-keys -t "$SESSION:0.6" "$SCRIPT_PATH/dashboard.sh C-m"
 
 # attendre tous les setup en background puis lancer phase 2
 (
