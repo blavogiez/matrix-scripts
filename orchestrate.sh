@@ -67,16 +67,16 @@ sleep 3
 # split horizontal (2 colonnes): P0 | P1
 tmux split-window -h -t "$SESSION:0"
 
-# col gauche: 2 splits verticaux (dns, db, element) - tailles égales
-tmux split-window -v -p 66 -t "$SESSION:0.0"
+# col gauche
+tmux split-window -v -p 67 -t "$SESSION:0.0"
 tmux split-window -v -p 50 -t "$SESSION:0.1"
 
-# col droite: 2 splits verticaux (backup, matrix, rproxy) - tailles égales
-tmux split-window -v -p 66 -t "$SESSION:0.3"
+# col droit
+tmux split-window -v -p 67 -t "$SESSION:0.3"
 tmux split-window -v -p 50 -t "$SESSION:0.4"
 
 # Dashboard pleine largeur en bas
-tmux split-window -v -f -l 6 -t "$SESSION:0"
+tmux split-window -v -f -l 4 -t "$SESSION:0"
 
 # Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
 # P0: dns | P1: db | P2: element (gauche) | P3: backup | P4: matrix | P5: rproxy (droite) | P6: dashboard
