@@ -11,7 +11,7 @@ tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp
 cd "$DIR/configuration"
 source ../config.env
 
-# Mapping dynamique SERVICE → variables
+# map des variables setup selon le service
 case $SERVICE in
     dns)     export HOSTNAME=$DNS_HOSTNAME;     export IP_SUFFIX=$DNS_SUFFIX ;;
     db)      export HOSTNAME=$DB_HOSTNAME;      export IP_SUFFIX=$DB_SUFFIX ;;
