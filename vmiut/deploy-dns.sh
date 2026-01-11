@@ -12,7 +12,7 @@ curl -fL --retry 3 --progress-bar -o /tmp/matrix-scripts.tar.gz "$REPO" && \
 tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp 
 cd "$DIR/configuration" 
 
-source ./config.env
+source ../config.env
 export HOSTNAME=$DNS_HOSTNAME
 export IP_SUFFIX=$DNS_SUFFIX
 
