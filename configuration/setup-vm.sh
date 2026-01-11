@@ -69,13 +69,7 @@ else
     log_error "Passerelle non accessible"
 fi
 
-log_info "Test résolution DNS..."
-ping -c 2 google.com > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-    log_success "DNS fonctionnel"
-else
-    log_error "DNS non fonctionnel"
-fi
+# Test DNS déplacé en Phase 2 (après installation DNS)
 echo
 
 # 8. configuration firewall

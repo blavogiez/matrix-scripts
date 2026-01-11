@@ -1,76 +1,83 @@
 #!/bin/bash
 
-# Run tmux depuis dattier, lancé automatiquement par dist-launch.sh
+# Orchestration 2 phases depuis dattier
+# phase 1: Setup parallèle de toutes les VMs (création + config réseau)
+# phase 2: Installation des services spécialisés avec dépendances
 
-# configuration (par souci de dynamicité)
 SESSION="matrix_deploy"
 REPO_URL="https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts"
 SCRIPT_PATH="scripts/vmiut"
 
-orchestrate_infra() {
+# phase 2 : Installation avec dépendances
+# dans cette phase certaines installations doivent attendre la fin des autres. Par exemple, Synapse a besoin que DB soit fini pour tester que la création d'un utilisateur marche
+phase2_install() {
+    tmux wait-for phase1_complete
 
-    # on attend que la VM DNS soit configurée avant de passer à la suite
+    # DNS d'abord (les autres en ont besoin)
+    tmux send-keys -t "$SESSION:0.0" "$SCRIPT_PATH/make-vm.sh dns install && tmux wait-for -S dns_ready" C-m
     tmux wait-for dns_ready
 
-    # disivion de l'espace de travail
-    tmux split-window -v -t "$SESSION:0.0"
-    tmux split-window -v -b -l 6 -t "$SESSION:0.1"
-    tmux resize-pane -t "$SESSION:0.0" -U 6
-    tmux split-window -h -t "$SESSION:0.0"
-    tmux split-window -h -t "$SESSION:0.3"
+    # Element + Backup en parallèle (indépendants)
+    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh element install && tmux wait-for -S element_ready" C-m
+    tmux send-keys -t "$SESSION:0.5" "$SCRIPT_PATH/make-vm.sh backup install && tmux wait-for -S backup_ready" C-m
 
-    # résultat de la disivion :
-    #
-    # P0 | P1
-    # -------
-    #   P2
-    # -------
-    # P3 | P4
-    #
+    # DB doit attendre backup car il en a besoin pour ses tests
+    tmux send-keys -t "$SESSION:0.1" "tmux wait-for backup_ready $SCRIPT_PATH/make-vm.sh db install && tmux wait-for -S db_ready" C-m
 
-    # exécution des commandes (ordre séquentiel)
+    # Matrix attend DB
+    tmux send-keys -t "$SESSION:0.2" "tmux wait-for db_ready && $SCRIPT_PATH/make-vm.sh matrix install && tmux wait-for -S matrix_ready" C-m
 
-    # P0: Base de données (après backup)
-    tmux send-keys -t "$SESSION:0.0" "tmux wait-for backup_ready && clear && $SCRIPT_PATH/make-db.sh; echo 'DB Running'; tmux wait-for -S db-ready ; bash" C-m
-
-    # P1: Matrix (après db)
-    #tmux send-keys -t "$SESSION:0.1" "tmux wait-for db-ready && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
-    tmux send-keys -t "$SESSION:0.1" "tmux wait-for backup_ready && sleep 60 && $SCRIPT_PATH/make-matrix.sh; echo 'Matrix Running'; tmux wait-for -S matrix-ready ; bash" C-m
-
-    # P3: Element (dns déjà ready car orchestrate_infra attend dns_ready)
-    tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-element.sh; echo 'Element Running'; tmux wait-for -S element-ready ; bash" C-m
-
-    # P4: Rproxy (après matrix, car matrix a attendu db donc c assez long)
-    tmux send-keys -t "$SESSION:0.4" "tmux wait-for backup_ready && sleep 150 && $SCRIPT_PATH/make-rproxy.sh; echo 'Rproxy Running'; tmux wait-for -S rproxy-ready ; bash" C-m
-
-    # P2: Monitoring (Au centre)
-    tmux send-keys -t "$SESSION:0.2" "watch -n 1 --color 'scripts/dashboard.sh'" C-m
+    # Rproxy en dernier (après matrix) 
+    tmux send-keys -t "$SESSION:0.4" "tmux wait-for matrix_ready && $SCRIPT_PATH/make-vm.sh rproxy install && tmux wait-for -S rproxy_ready" C-m
 }
 
-
+# === RESET SESSION ===
 if tmux has-session -t "$SESSION" 2>/dev/null; then
     echo "Reset de la session précédente..."
     tmux kill-session -t "$SESSION"
     sleep 1
 fi
 
-echo "Démarrage de l'orchestrateur..."
+echo "Démarrage de l'orchestration 2 phases..."
 tmux new-session -d -s "$SESSION"
 
-# lancement de la procédure complète (en attente que DNS soit up)
-orchestrate_infra &
+# Clone le repo d'abord
+tmux send-keys -t "$SESSION:0" "rm -rf scripts && git clone $REPO_URL scripts && clear" C-m
+sleep 3
 
-CMD_DNS="rm -rvf scripts; \
-         git clone $REPO_URL scripts && \
-         clear && \
-         tmux split-window -h -t '$SESSION:0.0' && \
-         tmux send-keys -t '$SESSION:0.1' '$SCRIPT_PATH/make-backup.sh; echo Backup Ready; tmux wait-for -S backup_ready; sleep 2; exit' C-m && \
-         $SCRIPT_PATH/make-dns.sh && \
-         echo 'DNS Ready! Splitting...' && \
-         tmux wait-for -S dns_ready && \
-         bash"
+# phase 1 : Setup parallèle (6 VMs)
+# Création de 6 panes
+tmux split-window -h -t "$SESSION:0.0"
+tmux split-window -v -t "$SESSION:0.0"
+tmux split-window -v -t "$SESSION:0.1"
+tmux split-window -v -t "$SESSION:0.2"
+tmux split-window -v -t "$SESSION:0.3"
 
-tmux send-keys -t "$SESSION:0" "$CMD_DNS" C-m
+# Layout:
+# P0 (dns)    | P2 (matrix)
+# P1 (db)     | P3 (element)
+#             | P4 (rproxy)
+#             | P5 (backup)
 
-# connexion à la session pour visualiser ce qu'il se passe
+# Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
+tmux send-keys -t "$SESSION:0.0" "$SCRIPT_PATH/make-vm.sh dns setup && tmux wait-for -S dns_setup" C-m
+tmux send-keys -t "$SESSION:0.1" "$SCRIPT_PATH/make-vm.sh db setup && tmux wait-for -S db_setup" C-m
+tmux send-keys -t "$SESSION:0.2" "$SCRIPT_PATH/make-vm.sh matrix setup && tmux wait-for -S matrix_setup" C-m
+tmux send-keys -t "$SESSION:0.3" "$SCRIPT_PATH/make-vm.sh element setup && tmux wait-for -S element_setup" C-m
+tmux send-keys -t "$SESSION:0.4" "$SCRIPT_PATH/make-vm.sh rproxy setup && tmux wait-for -S rproxy_setup" C-m
+tmux send-keys -t "$SESSION:0.5" "$SCRIPT_PATH/make-vm.sh backup setup && tmux wait-for -S backup_setup" C-m
+
+# attendre tous les setup en background puis lancer phase 2
+(
+    for vm in dns db matrix element rproxy backup; do
+        tmux wait-for ${vm}_setup
+    done
+    echo "Phase 1 complete! Lancement phase 2..."
+    tmux wait-for -S phase1_complete
+) &
+
+# lancer phase 2 en background (attend phase1_complete)
+phase2_install &
+
+# Connexion à la session
 exec tmux attach-session -t "$SESSION"

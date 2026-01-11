@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+# Template Phase 2 - %%SERVICE%% sera remplacé par sed (car on peut pas transmettre d'argument à la vm)
+
+SERVICE=%%SERVICE%%
+DIR="/tmp/matrix-scripts-main"
+
+cd "$DIR"
+source config.env
+
+# Test DNS (déplacé ici car DNS doit être installé en Phase 2 avant les autres)
+ping -c 1 google.com || echo "Warning: DNS not resolving"
+
+# Dépendances spécifiques pour les tests
+case $SERVICE in
+    matrix) apt install -y postgresql-client ;;
+esac
+
+cd "$SERVICE/"
+bash install.sh
+
+# Tests post-installation
+bats tests/test.bats && \
+rm -rf /tmp/*
