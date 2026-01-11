@@ -36,13 +36,10 @@ case $ACTION in
         log_info "Démarrage VM $SERVICE..."
         vmiut demarrer $SERVICE
 
-        log_info "Standby 30s avant démarrage..."
-        sleep 30
-
         log_info "Exécution du script de setup..."
         export SCRIPT="$GENERATED_SCRIPT"
         vmiut executer $SERVICE
-        log_success "Setup $SERVICE terminé"
+        log_success "Phase 1 : Setup $SERVICE terminé"
         ;;
     install)
         set -e
