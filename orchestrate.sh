@@ -45,6 +45,7 @@ tmux new-session -d -s "$SESSION"
 
 # Clone le repo d'abord
 tmux send-keys -t "$SESSION:0" "rm -rf scripts && git clone $REPO_URL scripts && clear" C-m
+
 sleep 3
 
 # phase 1 : Setup parallèle (6 VMs)
@@ -60,23 +61,29 @@ sleep 3
 # │     dashboard     │  (P6)
 # └───────────────────┘
 
-# split horizontal pour backup (P0 | P1)
-tmux split-window -h -t "$SESSION:0.0"
+# creation de la grille avec indices stables
+# Stratégie: créer tous les panes puis utiliser select-layout pour organiser
+#
+# Layout final voulu:
+# ┌─────────┬─────────┐
+# │ P0:dns  │P1:backup│
+# ├─────────┼─────────┤
+# │ P2:db   │P3:matrix│
+# ├─────────┼─────────┤
+# │P4:element│P5:rproxy│
+# ├─────────┴─────────┤
+# │   P6:dashboard    │
+# └───────────────────┘
 
-# split vertical du côté gauche pour db
-tmux split-window -v -t "$SESSION:0.0"
+# faire 6 panes supplémentaires (total 7 avec P0)
+for i in {1..6}; do
+    tmux split-window -t "$SESSION:0"
+done
 
-# split vertical du côté droit pour matrix
-tmux split-window -v -t "$SESSION:0.1"
+# Organiser en grille avec tiled layout
+tmux select-layout -t "$SESSION:0" tiled
 
-# split vertical pour element (sous db)
-tmux split-window -v -t "$SESSION:0.2"
-
-# split vertical pour rproxy (sous matrix)
-tmux split-window -v -t "$SESSION:0.3"
-
-# split en bas pour le dashboard
-tmux split-window -v -t "$SESSION:0.4"
+# Le dashboard (P6) doit être en bas et plus petit
 tmux resize-pane -t "$SESSION:0.6" -y 6
 
 # Lancement du setup parallèle sur toutes les VMs (pour aller plus vite)
