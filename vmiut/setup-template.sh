@@ -6,8 +6,7 @@ SERVICE=%%SERVICE%%
 DIR="/tmp/matrix-scripts-main"
 REPO="https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/archive/main/matrix-scripts-main.tar.gz"
 
-apt-get install -y curl
-curl -fL --retry 3 --progress-bar -o /tmp/matrix-scripts.tar.gz "$REPO" && \
+wget --tries=10 -O /tmp/matrix-scripts.tar.gz "$REPO" && \
 tar -xzf /tmp/matrix-scripts.tar.gz -C /tmp
 cd "$DIR/configuration"
 source ../config.env
