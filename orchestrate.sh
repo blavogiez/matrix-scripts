@@ -67,13 +67,13 @@ sleep 3
 # split horizontal (2 colonnes): P0 | P1
 tmux split-window -h -t "$SESSION:0"
 
-# col gauche: 2 splits verticaux (dns, db, element)
-tmux split-window -v -t "$SESSION:0.0"
-tmux split-window -v -t "$SESSION:0.0"
+# col gauche: 2 splits verticaux (dns, db, element) - tailles égales
+tmux split-window -v -p 66 -t "$SESSION:0.0"
+tmux split-window -v -p 50 -t "$SESSION:0.1"
 
-# col droite: 2 splits verticaux (backup, matrix, rproxy)
-tmux split-window -v -t "$SESSION:0.3"
-tmux split-window -v -t "$SESSION:0.3"
+# col droite: 2 splits verticaux (backup, matrix, rproxy) - tailles égales
+tmux split-window -v -p 66 -t "$SESSION:0.3"
+tmux split-window -v -p 50 -t "$SESSION:0.4"
 
 # Dashboard pleine largeur en bas
 tmux split-window -v -f -l 6 -t "$SESSION:0"
