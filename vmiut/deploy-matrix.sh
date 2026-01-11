@@ -3,6 +3,7 @@ set -e
 # déploiement automatique de matrix
 
 DIR="/tmp/matrix-scripts-main"
+export REPO="https://gitlab.univ-lille.fr/baptiste.lavogiez.etu/matrix-scripts/-/archive/main/matrix-scripts-main.tar.gz"
 
 apt-get install -y curl
 
