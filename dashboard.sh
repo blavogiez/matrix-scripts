@@ -1,38 +1,46 @@
 #!/bin/bash
-# tableau d'état des vm (suivre rapidement l'état de l'installation)
+# Dashboard d'état des VMs avec rafraîchissement automatique (pour suivre l'installation)
 
 # Couleurs
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-NC='\033[0m' # No Color
-
-# on test 2 chemins
-# 2>/dev/null pour plus de transparrence
-source config.env 2>/dev/null
-source scripts/config.env 2>/dev/null
+NC='\033[0m' # 
 
 
-echo "--- INFRASTRUCTURE STATUS ---"
-echo "Date: $(date)"
-echo "------------------------------"
-
-check_port() {
+check_vm_state() {
     local name=$1
-    local ip=$2
-    local port=$3
-    # On teste le port avec timeout de 1s
-    nc -z -w 1 "$ip" "$port" > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        echo -e "$name ($ip:$port) : ${GREEN}[UP]${NC}"
+    local vm_name=$2
+    local etat=$(vmiut info "$vm_name" 2>/dev/null | grep "^etat=" | cut -d'=' -f2)
+    if [ "$etat" = "running" ]; then
+        echo -e "$name ($vm_name) : ${GREEN}[UP]${NC}"
     else
-        echo -e "$name ($ip:$port) : ${RED}[DOWN]${NC}"
+        echo -e "$name ($vm_name) : ${RED}[DOWN]${NC}"
     fi
 }
 
-# Liste des services
-check_port "DNS" "$IP_PREFIX.$IP_OCTET3.$DNS_SUFFIX" 53
-check_port "Base de données" "$IP_PREFIX.$IP_OCTET3.$DB_SUFFIX" 5432
-check_port "Synapse Matrix"  "$IP_PREFIX.$IP_OCTET3.$MATRIX_SUFFIX" 8008
-check_port "Element Web"     "$IP_PREFIX.$IP_OCTET3.$ELEMENT_SUFFIX" 80
-check_port "Reverse Proxy" "$IP_PREFIX.$IP_OCTET3.$RPROXY_SUFFIX" 80
-check_port "Backup Server" "$IP_PREFIX.$IP_OCTET3.$BACKUP_SUFFIX" 22
+# boucle
+while true; do
+    clear
+
+    # chrono depuis debut
+    minutes=$((SECONDS / 60))
+    seconds=$((SECONDS % 60))
+
+    echo "--- Infrastructure matrix ---"
+    echo "Date: $(date)"
+    printf "Temps d'analyse: %02d:%02d\n" $minutes $seconds
+    echo "------------------------------"
+
+    # Vérification des VMs
+    check_vm_state "DNS"             "dns"
+    check_vm_state "Base de données" "db"
+    check_vm_state "Synapse Matrix"  "matrix"
+    check_vm_state "Element Web"     "element"
+    check_vm_state "Reverse Proxy"   "rproxy"
+    check_vm_state "Backup Server"   "backup"
+
+    echo "------------------------------"
+    echo "Appuyez sur Ctrl+C pour quitter"
+
+    sleep 1
+done
