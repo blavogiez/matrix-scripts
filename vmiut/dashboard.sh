@@ -16,6 +16,8 @@ IP_OCTET3="123"
 STATIC_VM_IP="$IP_PREFIX.$IP_OCTET3.254"
 REMOTE_USER="user" # User for SSH connection to the static VM
 
+echo "IP VM statique : $STATIC_IP_VM"
+
 # VM suffixes and hostnames for display and checking
 DNS_SUFFIX="5"
 DB_SUFFIX="3"
