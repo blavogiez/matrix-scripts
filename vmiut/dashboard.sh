@@ -7,14 +7,14 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 YELLOW='\033[0;33m' # Added for clarity in warnings
 
+source scripts/config.env
+
 # Static VM configured with Tailscale, to be used as a relay
 STATIC_VM_IP="$IP_PREFIX.$IP_OCTET3.254"
 REMOTE_USER="user" # User for SSH connection to the static VM
 
 echo "IP VM statique : $STATIC_IP_VM"
 
-# Source de la configuration
-source scripts/config.env
 
 echo "--- INFRASTRUCTURE STATUS (via SSH to static VM at $STATIC_VM_IP) ---"
 echo "Date: $(date)"

@@ -26,6 +26,7 @@ rm -rvf /tmp/scripts
 
 # changement de la configuration pour la machine physique
 git clone $REPO /tmp/scripts
+git checkout develop
 cd /tmp/scripts
 sed -i -e "s/PHYS_HOSTNAME=[^[:space:]]*/PHYS_HOSTNAME=$HOSTNAME/g" config.env
 sed -i -e 's/IP_OCTET3=".*"/IP_OCTET3="'"$IP_OCTET3"'"/g' config.env
