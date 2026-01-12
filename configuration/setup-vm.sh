@@ -67,11 +67,6 @@ fi
 # Test DNS déplacé en Phase 2 (après installation DNS)
 echo
 
-# 7. configuration firewall
-log_task "7. Configuration firewall..."
-./firewall.sh
-echo
-
 # récapitulatif
 log_info "========================================="
 log_success "Configuration terminée"
