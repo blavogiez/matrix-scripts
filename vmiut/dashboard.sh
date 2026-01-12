@@ -7,32 +7,14 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 YELLOW='\033[0;33m' # Added for clarity in warnings
 
-# --- Configuration ---
-# Infrastructure network settings
-IP_PREFIX="10.42"
-IP_OCTET3="123"
-
 # Static VM configured with Tailscale, to be used as a relay
 STATIC_VM_IP="$IP_PREFIX.$IP_OCTET3.254"
 REMOTE_USER="user" # User for SSH connection to the static VM
 
 echo "IP VM statique : $STATIC_IP_VM"
 
-# VM suffixes and hostnames for display and checking
-DNS_SUFFIX="5"
-DB_SUFFIX="3"
-MATRIX_SUFFIX="1"
-ELEMENT_SUFFIX="4"
-RPROXY_SUFFIX="2"
-BACKUP_SUFFIX="6"
-
-DNS_HOSTNAME="dns"
-DB_HOSTNAME="db"
-MATRIX_HOSTNAME="matrix"
-ELEMENT_HOSTNAME="element"
-RPROXY_HOSTNAME="rproxy"
-BACKUP_HOSTNAME="backup"
-
+# Source de la configuration
+source scripts/config.env
 
 echo "--- INFRASTRUCTURE STATUS (via SSH to static VM at $STATIC_VM_IP) ---"
 echo "Date: $(date)"
