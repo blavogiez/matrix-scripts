@@ -36,8 +36,8 @@ case $ACTION in
         log_info "Démarrage VM $SERVICE..."
         vmiut demarrer $SERVICE
 
-        log_info "Standy 30s apres demarrage pour éviter bug VirtualBox"
-        sleep 30
+        log_info "Standy 70s apres demarrage pour éviter bug VirtualBox"
+        sleep 70
 
         log_info "Exécution du script de setup..."
         export SCRIPT="$GENERATED_SCRIPT"
