@@ -8,7 +8,7 @@ log_info "Installation du serveur de sauvegarde"
 
 # Installation rsync (déjà fait dans config mais on refait pour etre sur)
 log_task "Installation de rsync..."
-apt-get install -y rsync
+apt-get install -f -y rsync
 
 # Creation du répertoire de sauvegarde
 log_task "Creation du répertoire /var/backups/matrix..."

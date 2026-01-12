@@ -10,6 +10,6 @@ log_info "Mise à jour des dépôts apt..."
 apt-get update && apt-get full-upgrade -y
 
 log_info "Installation des paquets: $PACKAGES..."
-apt-get install -y $PACKAGES
+apt-get install -f -y $PACKAGES
 
 log_success "Paquets installés avec succès"

@@ -6,7 +6,7 @@ source "$(dirname "$0")/../config.env"
 
 log_info "Configuration firewall pour $(hostname) !"
 
-apt-get install -y ufw
+apt-get install -f -y ufw
 
 ufw --force reset
 

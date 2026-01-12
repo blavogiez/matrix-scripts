@@ -18,7 +18,7 @@ echo
 
 # Installation de sshpass pour automatisation (on log ssh sans prompt)
 log_task "Installation de sshpass..."
-apt-get install -y sshpass
+apt-get install -f -y sshpass
 
 # Creation du répertoire local de sauvegarde
 log_task "Creation du répertoire /var/backups/postgresql..."

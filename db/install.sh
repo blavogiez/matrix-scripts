@@ -11,7 +11,7 @@ log_info "Base: $DB_NAME"
 
 # Installation
 log_task "Installation du paquet postgresql..."
-apt-get install -y postgresql
+apt-get install -f -y postgresql
 
 # Demarrage service
 log_task "Démarrage du service..."

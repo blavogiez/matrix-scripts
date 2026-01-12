@@ -15,7 +15,7 @@ echo ""
 
 # Installation nginx
 log_task "Installation du paquet nginx..."
-apt-get install -y nginx
+apt-get install -f -y nginx
 systemctl start nginx
 systemctl enable nginx
 
@@ -63,7 +63,7 @@ server {
 EOF
 
 # install de jq (Parser json, utilisé dans les tests)
-apt-get install -y jq
+apt-get install -f -y jq
 
 # suppression du site par defaut (qui bloque le port 80) et activation element
 rm -f /etc/nginx/sites-enabled/default
