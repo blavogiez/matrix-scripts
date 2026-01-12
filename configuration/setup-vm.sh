@@ -54,8 +54,13 @@ log_task "5. Configuration sudo..."
 ./config-sudo.sh
 echo
 
-# 6. vérifications finales
-log_task "6. Vérifications finales..."
+# 6. configuration tailscale
+log_task "6. Configuration Tailscale..."
+./config-tailscale.sh
+echo
+
+# 7. vérifications finales
+log_task "7. Vérifications finales..."
 log_info "Test connectivité passerelle..."
 ping -c 2 $GATEWAY > /dev/null 2>&1
 if [ $? -eq 0 ]; then
