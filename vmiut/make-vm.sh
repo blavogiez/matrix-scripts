@@ -18,7 +18,7 @@ if [ -z "$SERVICE" ]; then
     exit 1
 fi
 
-# Générer le script avec sed (remplace %%SERVICE%% par le nom du service)
+# genere le script avec sed (remplace %%SERVICE%% par le nom du service)
 GENERATED_SCRIPT="/tmp/${ACTION}-${SERVICE}.sh"
 sed "s/%%SERVICE%%/$SERVICE/g" "$TEMPLATE_DIR/${ACTION}-template.sh" > "$GENERATED_SCRIPT"
 chmod +x "$GENERATED_SCRIPT"
