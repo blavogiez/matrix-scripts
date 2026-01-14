@@ -1,4 +1,4 @@
-# Dépôt public pour scripts relatifs à l'nstallation d'une architecture matrix
+# Dépôt public pour scripts relatifs à l'installation d'une architecture matrix
 
 > Pour des informations sur les procédures d'installation, consultez le [dépôt des procédures](https://gitlab.univ-lille.fr/etu/2025-2026/s303/g-lavogiez-robert).
 
@@ -11,7 +11,7 @@
 
 # Utilisation
 
-Forkez ce dépôt, modifiez votre `config.env` (y compris URL dépôt) pour mettre votre numéro d'IP (octet 3) attribué. 
+Forkez ce dépôt, modifiez votre `config.env` (y compris URL dépôt) pour mettre votre numéro d'IP (octet 3) attribué. `config.env` centralise toutes les variables : IP, packages, noms d'hôtes des services... 
 
 Lancez 
 
@@ -31,7 +31,7 @@ De ce fait, l'autoinstall va utiliser votre :
 - nom de machine physique
 - numéro d'IP dans la plage d'attribution
 
-Automatiquement, à la fin de l'installation, un tunnel SSH est initié vers le reverse proxy (rentrez le mot de passe configuré), et votre navigateur s'ouvre avec l'url element correct.
+Automatiquement, à la fin de l'installation, un tunnel SSH est initié vers le reverse proxy (rentrez le mot de passe configuré), et votre navigateur s'ouvre avec l'URL Element correcte.
 
 # Fonctionnement
 
@@ -41,7 +41,7 @@ Une utilisation typique serait alors :
 
 ```bash
 baptiste.lavogiez.etu@dattier:~$ export SCRIPT=scripts/vmiut/deploy-matrix.sh
-baptiste.lavogiez.etu@dattier:~$ vmiut executer matrix # le script va chercher la variable $SCRIPT et l'executer sur la vm matrix
+baptiste.lavogiez.etu@dattier:~$ vmiut executer matrix # le script va chercher la variable $SCRIPT et l'exécuter sur la vm matrix
 ```
 
 Tout s'exécutera en tant que `root` sur la vm, avec le résultat s'affichant dans la sortie standard.
@@ -52,7 +52,7 @@ Nous ne pouvons pas passer d'argument au script mis dans la variable `SCRIPT`. A
 
 Enfin, `make-vm` a deux modes : `install` et `setup`, correspondant aux deux phases de l'installation, appelant donc deux scripts différents (`install-template` ou `setup-template`). 
 
-`make-vm` appelé sur `dattier` associerait ainsi `install-element.sh` à la variable `SCRIPT`, puis appellerait `vmiut executer {nom machine}`, le nom de machine correspondant logiquement au service appelé par `make-vm`.
+`make-vm` appelé sur `dattier` associerait ainsi `install-element.sh`, script fabriqué, à la variable `SCRIPT`, puis appellerait `vmiut executer {nom machine}`, le nom de machine correspondant logiquement au service appelé par `make-vm`. 
 
 ## Spécialisation des scripts, depuis la machine virtuelle créée 
 
@@ -68,11 +68,22 @@ Les scripts sont pensés pour être explicites, ainsi l'arborescence pourra vous
 
 L'architecture s'installe en ~6min30 pour 6 VMs (en conditions optimales)
 
-### Phase 1 : Setup parallèle
+### Phase 1 : Configuration parallèle (setup-template.sh)
 
-Dans un premier temps, les 6 VMs sont configurées
+Dans un premier temps, les 6 VMs sont configurées **en parallèle** via `setup-template.sh`. Ce script :
 
-### Phase 2 : Installation des services
+1. Télécharge et extrait le dépôt sur la VM
+2. Associe les variables du service (`HOSTNAME`, `IP_SUFFIX`) selon un `case`
+3. Appelle `configuration/setup-vm.sh` qui exécute :
+   - Installation des paquets de base (vim, curl, rsync, bats...)
+   - Configuration de l'adresse IP statique + `dns-nameservers` si la VM n'est pas le DNS
+   - Définition du hostname (permanent)
+   - Configuration de sudo
+   - (DNS uniquement) Remplissage de `/etc/hosts` avec toutes les VMs
+
+Cette phase étant indépendante entre VMs, elle peut être parallélisée afin d'accélérer l'installation.
+
+### Phase 2 : Installation des services (install-template.sh)
 
 Ensuite, les services sont installés dans un ordre précis afin de permettre des tests ciblés :
 
@@ -81,13 +92,15 @@ Ensuite, les services sont installés dans un ordre précis afin de permettre de
 - 3 : `matrix` ; doit se connecter à `db` pour vérifier le bon fonctionnement
 - 4 : `rproxy` : doit réussir des requêtes vers le nom physique, nécessitant donc `matrix` (donc `db`) et `element` fonctionnels 
 
-À la toute fin, le firewall est configuré (si il était configuré avant, le dashboard afficherait toujours `[DOWN]`) et les mots de passe sont changés.
+À la toute fin, le firewall est configuré (s'il était configuré avant, le dashboard afficherait toujours `[DOWN]`).
+
+Les mots de passe sont également changés à la toute fin (nous y sommes contraints car il y a deux commandes `vmiut executer` qui sont réalisées et la sous-couche VirtualBox nécessite le mot de passe par défaut).
 
 ### Note sur la sécurité
 
 **Il est préférable de changer les mots de passe d'utilisateur/root car nous avons choisi de les passer par le dépôt git.**
 
-Une solution alternative consisterait à utiliser une génération aléatoire dans `config.env`, avec, par exemple, `openssl rand -base64 32`, puis de transmettre les mot de passe pour chaque machine à l'utilisateur. Par soucis d'accessibilité à nos machines, nous avons choisi un mot de passe fixe et nous l'avons changé manuellement à la fin. Les deux solutions restent parfaitement viables (la génération aléatoire est plus sécurisée en réalité).
+Une solution alternative consisterait à utiliser une génération aléatoire dans `config.env`, avec, par exemple, `openssl rand -base64 32`, puis de transmettre les mots de passe pour chaque machine à l'utilisateur. Par souci d'accessibilité à nos machines, nous avons choisi un mot de passe fixe et nous l'avons changé manuellement à la fin. Les deux solutions restent parfaitement viables (la génération aléatoire est plus sécurisée en réalité).
 
 # Licence
 
