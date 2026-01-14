@@ -12,7 +12,7 @@ source config.env 2>/dev/null
 source scripts/config.env 2>/dev/null
 
 
-echo "--- INFRASTRUCTURE STATUS ---"
+echo "--- État de l'infra (si [DOWN], ce peut être le firewall)---"
 echo "Date: $(date)"
 echo "------------------------------"
 
