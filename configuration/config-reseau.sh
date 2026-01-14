@@ -17,7 +17,20 @@ log_info "====================="
 
 # configure ip statique et dns
 
+# configuration du serveur DNS
+log_info "Installation de resolvconf..."
+log_info "DEBIAN_FRONTEND=$DEBIAN_FRONTEND"
+apt install -y resolvconf
+
+# resolvconf va automatiquement générer /etc/resolv.conf
+# basé sur la directive dns-nameservers dans /etc/network/interfaces
+
+
 log_info "Configuration IP statique: $IP..."
+
+log_info "On éteint enp0s3"
+ifdown $INTERFACE
+
 
 # configure /etc/network/interfaces
 if [ "$HOSTNAME" == "dns" ]; then
@@ -56,17 +69,8 @@ fi
 
 log_success "IP statique configurée: $IP"
 
-# configuration du serveur DNS
-log_info "Installation de resolvconf..."
-log_info "DEBIAN_FRONTEND=$DEBIAN_FRONTEND"
-apt install -y resolvconf
-
-# resolvconf va automatiquement générer /etc/resolv.conf
-# basé sur la directive dns-nameservers dans /etc/network/interfaces
-
 # redémarre interface
 log_info "Redémarrage interface réseau..."
-ifdown $INTERFACE
 ifup $INTERFACE
 
 log_success "Configuration réseau terminée"
