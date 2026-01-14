@@ -19,9 +19,6 @@ log_info "====================="
 
 log_info "Configuration IP statique: $IP..."
 
-ifdown $INTERFACE 2>/dev/null
-log_info "On éteint enp0s3" 
-
 # configure /etc/network/interfaces
 if [ "$HOSTNAME" == "dns" ]; then
     cat > /etc/network/interfaces << EOF
@@ -69,6 +66,7 @@ apt install -y resolvconf
 
 # redémarre interface
 log_info "Redémarrage interface réseau..."
+ifdown $INTERFACE
 ifup $INTERFACE
 
 log_success "Configuration réseau terminée"
