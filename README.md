@@ -92,7 +92,7 @@ Cette phase étant indépendante entre VMs, elle peut être parallélisée afin 
 
 #### Phase 2 : Installation des services (install-template.sh)
 
-Ensuite, les services sont installés dans un ordre précis afin de permettre des tests ciblés :
+Ensuite, les services sont installés dans un ordre précis (contrôlé avec les signaux `wait-for` de `tmux`) afin de permettre des tests ciblés :
 
 - 1 : `dns`, `backup` ; ne communiquent pas directement avec les autres machines pendant leur installation
 - 2 : `db`, `element` ; services plus indépendants (`db` a tout de même besoin de `backup` pour les tests)
