@@ -7,13 +7,13 @@
 
 # Démonstration
 
-[Voir la démo accélérée](assets/automatic-install.mp4)
+[Voir la démonstration accélérée](assets/automatic-install.mp4)
 
 # Utilisation
 
-Forkez ce dépôt, modifiez votre `config.env` (y compris URL dépôt) pour mettre votre numéro d'IP (octet 3) attribué. `config.env` centralise toutes les variables : IP, packages, noms d'hôtes des services... 
+Forkez ce dépôt, modifiez votre `config.env` selon vos besoins (avec votre nouvelle URL dépôt). Dans `attribution-ip.env`, mettez votre numéro d'IP (octet 3) attribué, à côté de votre nom tel que `toto.tata.etu=123`. `config.env` centralise toutes les variables d'installation : IP, packages, noms d'hôtes des services...
 
-Lancez 
+Lancez, sur une machine physique :
 
 ```bash
 ./dist-launch.sh
@@ -31,7 +31,11 @@ De ce fait, l'autoinstall va utiliser votre :
 - nom de machine physique
 - numéro d'IP dans la plage d'attribution
 
-Automatiquement, à la fin de l'installation, un tunnel SSH est initié vers le reverse proxy (rentrez le mot de passe configuré), et votre navigateur s'ouvre avec l'URL Element correcte.
+l'avantage étant que ce n'est pas hardcodé et modifiable selon *qui* lance le script et *où*.
+
+Ensuite, `orchestrate.sh` est exécuté sur la machine de virtualisation distante configurée. Ce script ouvre `tmux` avec autant de terminaux que de machines afin d'avoir une pleine visibilité sur l'installation (voir démonstration).
+
+Automatiquement, à la fin de l'installation, un tunnel SSH est initié vers le reverse proxy (rentrez le mot de passe configuré), et Firefox s'ouvre avec l'URL Element correcte.
 
 # Fonctionnement
 
@@ -52,11 +56,14 @@ Nous ne pouvons pas passer d'argument au script mis dans la variable `SCRIPT`. A
 
 En effet, `make-vm` a deux modes : `install` et `setup`, correspondant aux deux phases de l'installation, appelant donc deux scripts différents (`install-template` ou `setup-template`). 
 
-`make-vm` appelé sur `dattier` associerait ainsi `install-element.sh`, script fabriqué, à la variable `SCRIPT`, puis appellerait `vmiut executer {nom machine}`, le nom de machine correspondant logiquement au service appelé par `make-vm`. 
+> Si `make-vm setup {nom machine}` est appelé, alors la vm `{nom machine}` est supprimée, puis recréée, puis démarrée (visible dans la démonstration).
+
+`make-vm install element` appelé sur `dattier` associerait ainsi, après fabrication, `install-element.sh` à la variable `SCRIPT`, puis appellerait `vmiut executer {nom machine}`, le nom de machine correspondant logiquement au service appelé par `make-vm`. 
+
 
 ## Spécialisation des scripts, depuis la machine virtuelle créée 
 
-Lorsque `vmiut executer {nom machine}` est appelé pour la première fois, la machine virtuelle est vide. Elle va donc cloner ce dépôt, exécuter la phase de configuration (dossier configuration commun à toutes les VMs où des paramètres changent tout de même, comme le suffixe d'IP ou le `hostname`) et , se déplacer dans le dossier correspondant à son service, pour exécuter `install.sh` étant cette-fois ci spécialisé pour son service (et, à la fin, exécuter les tests). 
+Lorsque `vmiut executer {nom machine}` est appelé pour la première fois, la machine virtuelle est vide. Elle va donc cloner ce dépôt, exécuter la phase de configuration (dossier configuration commun à toutes les VMs où des paramètres changent tout de même, comme le suffixe d'IP ou le `hostname`) et, se déplacer dans le dossier correspondant à son service, pour exécuter `install.sh` étant cette fois-ci spécialisé pour son service (et, à la fin, exécuter les tests). 
 
 Les scripts sont pensés pour être explicites, ainsi l'arborescence pourra vous renseigner.
 
@@ -86,7 +93,7 @@ Ensuite, les services sont installés dans un ordre précis afin de permettre de
 - 3 : `matrix` ; doit se connecter à `db` pour vérifier le bon fonctionnement
 - 4 : `rproxy` : doit réussir des requêtes vers le nom physique redirigeant vers les deux machines étant `matrix` (nécessitant ainsi `db`) et `element`. 
 
-À la toute fin de l'installation d'un service, le firewall est configuré (s'il était configuré avant, le dashboard afficherait toujours `[DOWN]` puisque fonctionnant par requête réseau). **On peut configurer le firewall pendant la phase de setup si l'on souhaite tester l'installation sous firewall (fonctionnement des liens entre machine). Il s'agit dans notre cas plus d'un choix de monitoring pour la démonstration, ayant testé le firewall complet et ne l'ayant plus modifié lorsque déplacé à la fin.**
+À la toute fin de l'installation d'un service, le firewall est configuré (s'il était configuré avant, le dashboard afficherait toujours `[DOWN]` puisque fonctionnant par requête réseau). **On peut configurer le firewall pendant la phase de setup si l'on souhaite tester l'installation sous firewall (fonctionnement des liens entre machines). Il s'agit dans notre cas plus d'un choix de monitoring pour la démonstration, ayant testé le firewall complet et ne l'ayant plus modifié lorsque déplacé à la fin.**
 
 Les mots de passe sont également changés à la toute fin (nous y sommes contraints car il y a deux commandes `vmiut executer` qui sont réalisées et la sous-couche VirtualBox nécessite le mot de passe par défaut).
 
@@ -99,4 +106,3 @@ Une solution alternative consisterait à utiliser une génération aléatoire da
 # Licence
 
 - Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie 
-- Voir [Licence](.LICENSE) - copie interdite sans autorisation
