@@ -50,23 +50,17 @@ Tout s'exécutera en tant que `root` sur la vm, avec le résultat s'affichant da
 
 Nous ne pouvons pas passer d'argument au script mis dans la variable `SCRIPT`. Ainsi, nous allons "fabriquer" un argument avec notre script `make-vm`, qui lorsque appelé sur `dattier` de la façon `./make-vm.sh install element`, peut fabriquer, par exemple, un `install-element.sh` à partir de `install-template.sh`. La structure du dépôt (scripts aux noms identiques dans des dossiers spécialisés) permet de spécialiser ce template en faisant deux commandes `sed`. 
 
-Enfin, `make-vm` a deux modes : `install` et `setup`, correspondant aux deux phases de l'installation, appelant donc deux scripts différents (`install-template` ou `setup-template`). 
+En effet, `make-vm` a deux modes : `install` et `setup`, correspondant aux deux phases de l'installation, appelant donc deux scripts différents (`install-template` ou `setup-template`). 
 
 `make-vm` appelé sur `dattier` associerait ainsi `install-element.sh`, script fabriqué, à la variable `SCRIPT`, puis appellerait `vmiut executer {nom machine}`, le nom de machine correspondant logiquement au service appelé par `make-vm`. 
 
 ## Spécialisation des scripts, depuis la machine virtuelle créée 
 
-Lorsque `vmiut executer {nom machine}` est appelé pour la première fois, la machine virtuelle est vide. Elle va donc cloner ce dépôt et se déplacer dans le dossier correspondant à son service, pour exécuter `install.sh` (et, à la fin, exécuter les tests). 
-
-
+Lorsque `vmiut executer {nom machine}` est appelé pour la première fois, la machine virtuelle est vide. Elle va donc cloner ce dépôt, exécuter la phase de configuration (dossier configuration commun à toutes les VMs où des paramètres changent tout de même, comme le suffixe d'IP ou le `hostname`) et , se déplacer dans le dossier correspondant à son service, pour exécuter `install.sh` étant cette-fois ci spécialisé pour son service (et, à la fin, exécuter les tests). 
 
 Les scripts sont pensés pour être explicites, ainsi l'arborescence pourra vous renseigner.
 
-
-
-
-
-L'architecture s'installe en ~6min30 pour 6 VMs (en conditions optimales)
+L'architecture s'installe en ~6min30 pour 6 VMs (en conditions optimales). Les deux phases sont expliquées ci-dessous :
 
 ### Phase 1 : Configuration parallèle (setup-template.sh)
 
@@ -87,12 +81,12 @@ Cette phase étant indépendante entre VMs, elle peut être parallélisée afin 
 
 Ensuite, les services sont installés dans un ordre précis afin de permettre des tests ciblés :
 
-- 1 : `dns`, `backup` ; ne nécessitent pas de résolution DNS des autres machines
-- 2 : `db`, `element` ; services indépendants (`db` a tout de même besoin de `backup` pour les tests)
+- 1 : `dns`, `backup` ; ne communiquent pas directement avec les autres machines pendant leur installation
+- 2 : `db`, `element` ; services plus indépendants (`db` a tout de même besoin de `backup` pour les tests)
 - 3 : `matrix` ; doit se connecter à `db` pour vérifier le bon fonctionnement
-- 4 : `rproxy` : doit réussir des requêtes vers le nom physique, nécessitant donc `matrix` (donc `db`) et `element` fonctionnels 
+- 4 : `rproxy` : doit réussir des requêtes vers le nom physique redirigeant vers les deux machines étant `matrix` (nécessitant ainsi `db`) et `element`. 
 
-À la toute fin, le firewall est configuré (s'il était configuré avant, le dashboard afficherait toujours `[DOWN]`).
+À la toute fin de l'installation d'un service, le firewall est configuré (s'il était configuré avant, le dashboard afficherait toujours `[DOWN]` puisque fonctionnant par requête réseau). **On peut configurer le firewall pendant la phase de setup si l'on souhaite tester l'installation sous firewall (fonctionnement des liens entre machine). Il s'agit dans notre cas plus d'un choix de monitoring pour la démonstration, ayant testé le firewall complet et ne l'ayant plus modifié lorsque déplacé à la fin.**
 
 Les mots de passe sont également changés à la toute fin (nous y sommes contraints car il y a deux commandes `vmiut executer` qui sont réalisées et la sous-couche VirtualBox nécessite le mot de passe par défaut).
 
@@ -100,7 +94,7 @@ Les mots de passe sont également changés à la toute fin (nous y sommes contra
 
 **Il est préférable de changer les mots de passe d'utilisateur/root car nous avons choisi de les passer par le dépôt git.**
 
-Une solution alternative consisterait à utiliser une génération aléatoire dans `config.env`, avec, par exemple, `openssl rand -base64 32`, puis de transmettre les mots de passe pour chaque machine à l'utilisateur. Par souci d'accessibilité à nos machines, nous avons choisi un mot de passe fixe et nous l'avons changé manuellement à la fin. Les deux solutions restent parfaitement viables (la génération aléatoire est plus sécurisée en réalité).
+Une solution alternative consisterait à utiliser une génération aléatoire dans `config.env`, avec, par exemple, `openssl rand -base64 32`, puis de transmettre les mots de passe pour chaque machine à l'utilisateur. Par souci d'accessibilité à nos machines, nous avons choisi un mot de passe fixe et nous l'avons changé manuellement à la fin. Les deux solutions restent parfaitement viables (la génération aléatoire étant en réalité plus sécurisée).
 
 # Licence
 
