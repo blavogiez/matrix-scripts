@@ -15,6 +15,8 @@
 
 [Voir la démonstration accélérée](assets/automatic-install.mp4)
 
+https://github.com/user-attachments/assets/d2efc8f7-31fb-4c27-8bf9-c3130605f411
+
 ## Utilisation
 
 Forkez ce dépôt, modifiez votre `config.env` selon vos besoins (avec votre nouvelle URL dépôt). Dans `attribution-ip.env`, mettez votre numéro d'IP (octet 3) attribué, à côté de votre nom tel que `toto.tata.etu=123`. `config.env` centralise toutes les variables d'installation : IP, packages, noms d'hôtes des services...
