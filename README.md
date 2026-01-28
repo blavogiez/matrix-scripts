@@ -1,15 +1,15 @@
 # Installation automatique d'une architecture matrix
 
-> Pour des informations sur les procédures d'installation, consultez le [dépôt des procédures](https://gitlab.univ-lille.fr/etu/2025-2026/s303/g-lavogiez-robert).
+> Pour des informations sur les procédures d'installation, consultez le [dépôt des procédures](https://github.com/blavogiez/matrix-installation).
 
-- Auto-installation de 6 VMs (voir l'architecture dans [Sommaire procédures](https://gitlab.univ-lille.fr/etu/2025-2026/s303/g-lavogiez-robert/-/blob/main/README.md?ref_type=heads)) avec DNS, pare-feu et sauvegarde automatique configurés.
+- Auto-installation de 6 VMs (voir l'architecture dans [Sommaire procédures](https://github.com/blavogiez/matrix-installation/blob/main/README.md)) avec DNS, pare-feu et sauvegarde automatique configurés.
 - Tests (Framework BATS)
 
 ## **Informations de développement**
 
 - **Développé par** : Ethan Robert, Baptiste Lavogiez
 - **Contact** :  
-  - Mail : [ethan.robert.etu@univ-lille.fr](mailto:ethan.robert.etu@univ-lille.fr) | [baptiste.lavogiez.etu@univ-lille.fr](mailto:baptiste.lavogiez.etu@univ-lille.fr)
+  - Mail : [ethan.robert.etu@univ-lille.fr](mailto:ethan.robert.etu@univ-lille.fr) | [baptiste.lavogiez@proton.me](mailto:baptiste.lavogiez@proton.me)
 
 ## Démonstration
 
@@ -113,5 +113,5 @@ Une solution alternative consisterait à utiliser une génération aléatoire da
 
 ## Licence
 
-- Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie 
+- Script `vmiut` (non contenu ici) réalisé par Bruno Beaufils - Michaël Hauspie (professeurs à l'Université de Lille)
 - [Apache 2.0](.LICENSE)
